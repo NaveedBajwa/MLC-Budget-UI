@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "mlc-budget-ui-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/mlcBudgetUi/MlcBudgetUiWebPart.js",
+          "manifest": "./src/webparts/mlcBudgetUi/MlcBudgetUiWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MlcBudgetUiWebPartStrings": "lib/webparts/mlcBudgetUi/loc/{locale}.js"
+  }
+}
