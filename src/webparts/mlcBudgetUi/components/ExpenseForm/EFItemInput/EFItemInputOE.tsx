@@ -169,6 +169,7 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
     this.IsAdmin();
     this.IsBudgetReadOnly();
     this.IsbudgetYear();
+    window.scrollTo(0, 0);
   }
 
   public render(): JSX.Element {
@@ -326,10 +327,13 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
       totalDiffColor = "red";
     }
 
-    //if (this.state.itemId!= "0")
-    //{
-    //  buttonText = "Update Item";
-    // }
+    let addORupdateText = "add";
+
+    if (this.state.itemId!= "0")
+    {
+      buttonText = "Update Item";
+      addORupdateText = "update"
+    }
     if (this.state.PRIORITY != null)
     {
       strPriority = this.state.PRIORITY.toString();
@@ -378,7 +382,7 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
         <table style={{width:"100%"}}>
           <tr>
             <td style={{backgroundColor:"#89c4f4",color:"white",padding:"10px" }} align="center" >
-              To add an item, complete the form and below, then click the 'Save Item' button
+              To {addORupdateText} an item, complete the form below, then click the {buttonText} button
             </td>
           </tr>
            <tr style={{width:"100%"}}>
@@ -402,22 +406,27 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
             <td style={{width:"100%"}}>
               <table style={{width:"100%"}}>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"100%"}}>
+                  <td style={{width:"15%"}}>
                     <b>Priority:</b>
+                  </td>
+                  <td style={{width:"85%"}}>
+                    &nbsp;
                   </td>
                 </tr>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"100%"}}>
+                  <td style={{width:"15%"}}>
                     <ComboBox
                     label=""
                     key={'Priority'}
-                    allowFreeform={true}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.priorityOptions}
                     selectedKey= {strPriority}
                     disabled={requestFieldsDisabled}
                     onChange ={this.comboPRIORITY.bind(this)}
                     />
+                  </td>
+                  <td style={{width:"85%"}}>
+                  &nbsp;
                   </td>
                 </tr>
               </table>
@@ -440,19 +449,8 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
                     <b>Quarterly</b>
                   </td>
                   <td>&nbsp;</td>
-                  <td align="right" style={{width:"17%"}} >
-                    <table style={{width:"100%"}} >
-                      <tr style={{width:"100%"}}>
-                        <td style={{width:"100%",  textAlign:"left"}} onClick={this.copyApproved.bind(this)}>
-                        <b>&#8704;</b>
-                        </td>
-                        <td>
+                  <td align="right" style={{width:"17%"}} title="Click to Fill-down Amounts"  onClick={this.copyApproved.bind(this)}>
                         <b>Approved</b>    
-                        </td>
-                      </tr>
-                    </table>
-                    
-                    
                   </td>
                   <td align="right" style={{width:"17%"}}>
                     <b>Quarterly</b>
@@ -825,7 +823,6 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
                     <ComboBox
                     label=""
                     key={'Approved'}
-                    allowFreeform={true}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.approvalOptions}
                     selectedKey={strApproved}
@@ -856,11 +853,8 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
               
             </td>
           </tr>
-          <tr style={{borderBottomWidth:"1px", borderBottomColor:"black", borderBottomStyle:"solid" }}>
-                     <td colSpan={8} style={{borderBottomWidth:"1px", borderBottomColor:"black", borderBottomStyle:"solid" }}></td>
-          </tr>
           <tr>
-            <td  colSpan={8} style={{borderBottomWidth:"1px", borderBottomColor:"black", borderBottomStyle:"solid" }}>
+            <td  colSpan={8} >
               <table style={{width:"100%"}}>
                 <tr  style={{width:"100%"}}>
                   <td style={{width:"33%"}} align="left">
@@ -989,8 +983,11 @@ public async DeleteItemWS()
         {
 
           this.props.refreshThis(this.state.ItemsAdded);
-          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully updated in the system"});
+          //this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully updated in the system"});
           //this.setItemsStudentTotal();
+          this.setState({ ItemsAdded:(this.state.ItemsAdded +1)});
+          this.NewItem();
+          //$(#s4-workspace).scroll(0,0);
         }
       }
     );

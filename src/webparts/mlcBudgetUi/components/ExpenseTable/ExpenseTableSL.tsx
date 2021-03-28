@@ -181,28 +181,28 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
               <table style={{width:"100%", borderStyle:"solid", border:"1px", borderColor:"black",borderCollapse:"collapse" }} >
 
                 <tr  style={{border:1, backgroundColor:"#D3D3D3",paddingTop:3}} >
-                  <td style={{width:"22%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+                  <td style={{width:"32%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
                     <b>ITEM</b>
                   </td>
-                  <td style={{width:"22%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+                  <td style={{width:"8%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
                     <b>Attendance</b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} > 
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} > 
                     <b>TERM 1 </b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                   <b>TERM 2 </b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                   <b>TERM 3 </b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                   <b>TERM 4 </b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                     <b>TOTAL </b>
                   </td>
-                  <td align="right" style={{width:"13%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{width:"10%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                     <b>APPR TOTAL </b>
                   </td>
                 </tr>

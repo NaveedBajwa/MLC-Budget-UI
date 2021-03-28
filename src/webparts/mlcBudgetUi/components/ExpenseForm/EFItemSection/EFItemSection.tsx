@@ -51,6 +51,7 @@ export interface IEFItemSectionProps {
   BudgetYearOptions:IComboBoxOptionLoan[];
   OnChangeItemId:Function;
   refresh:number;
+  itemId:string;
 }
 
 export interface IEFItemSectionState {
@@ -97,7 +98,7 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
         <table style={{width:"100%"}}>
         <tr style={{width:"100%"}}>
         <td colSpan={2} style={{width:"100%"}}>
-          <EFItemSectionOE refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+          <EFItemSectionOE ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
             costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
             OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
             OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId}  

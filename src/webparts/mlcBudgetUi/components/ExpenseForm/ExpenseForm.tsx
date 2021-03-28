@@ -101,7 +101,7 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
               <table style={{width:"100%",verticalAlign:"top"}}>
                 <tr style={{width:"100%",verticalAlign:"top"}} >
                   <td style={{width:"100%",verticalAlign:"top"}} colSpan={2}>
-                    <EFItemSection refresh={this.state.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)}   budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+                    <EFItemSection itemId={this.props.itemId} refresh={this.state.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)}   budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
                         costCenterId={this.props.costCenterId} budgetYearId={this.props.budgetYearId} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
                         OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
                         OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId} 
@@ -120,9 +120,9 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
               </table>
             </td>
             <td style={{width:"40%",verticalAlign:"top"}} align="left">
-            <EFItemInput  OnChangeItemId={this.props.OnChangeItemId.bind(this)} itemId={this.props.itemId}  budgetAppClient={this.props.budgetAppClient} context={this.props.context} 
+            <EFItemInput budgetCategoryId={this.props.budgetCategoryId} OnChangeItemId={this.props.OnChangeItemId.bind(this)} itemId={this.props.itemId}  budgetAppClient={this.props.budgetAppClient} context={this.props.context} 
               costCenterId={this.state.costCenterId} AccountNumberId={this.props.itemCategoryId} YearId={this.props.budgetYearId} 
-              refreshThis={this.Refreshthis.bind(this)}
+              refreshThis={this.Refreshthis.bind(this)} budgetYearId={this.props.budgetYearId} itemCategoryId={this.props.itemCategoryId}
               /> 
             </td>
           </tr>

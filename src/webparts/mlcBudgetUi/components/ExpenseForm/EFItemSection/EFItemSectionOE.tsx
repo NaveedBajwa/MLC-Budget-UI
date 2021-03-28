@@ -52,6 +52,7 @@ export interface IEFItemSectionOEProps {
   BudgetYearOptions:IComboBoxOptionLoan[];
   OnChangeItemId:Function;
   refresh:number;
+  ItemId:string;
 }
 
 export interface IEFItemSectionOEState {
@@ -65,6 +66,7 @@ export interface IEFItemSectionOEState {
   ItemCategoryOption:IComboBoxOptionLoan[];
   items:any[];
   refresh:number;
+  itemID:string;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -85,7 +87,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
     //this.getItemCategoryOptions.bind(this);
     //let CostCenterOption:IComboBoxOptionLoan[] = this.getCostCenterOptions();
 
-    this.state = { refresh:0, items:[],ItemCategoryOption:[], budgetCategoryText:this.props.budgetCategoryText, budgetCategoryId:this.props.budgetCategoryId,  costCenterText:this.props.costCenterText,
+    this.state = { itemID:"0", refresh:0, items:[],ItemCategoryOption:[], budgetCategoryText:this.props.budgetCategoryText, budgetCategoryId:this.props.budgetCategoryId,  costCenterText:this.props.costCenterText,
       costCenterId:this.props.costCenterId, BudgetCategoryOptions:this.props.BudgetCategoryOptions, CostCenterOptions:this.props.CostCenterOptions, itemCategoryId:this.props.itemCategoryId
     };
   }
@@ -121,7 +123,6 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
                     <ComboBox
                     label=""
                     key={'BudgetCategory'}
-                    allowFreeform={true}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.props.BudgetCategoryOptions}
                     selectedKey={this.state.budgetCategoryId}
@@ -148,7 +149,6 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
                  <ComboBox
                     label=""
                     key={'ItemCategory'}
-                    allowFreeform={true}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.ItemCategoryOption}
                     selectedKey={this.props.itemCategoryId}
@@ -289,8 +289,8 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
             this.requestTotal += (item.JAN_TOT + item.FEB_TOT + item.MAR_TOT +item.APR_TOT + item.MAY_TOT + item.JUN_TOT +item.JUL_TOT + item.AUG_TOT + item.SEP_TOT +item.OCT_TOT + item.NOV_TOT + item.DEC_TOT);
             this.approvedTotal += item.APP_JAN_TOT + item.APP_FEB_TOT + item.APP_MAR_TOT +item.APP_APR_TOT + item.APP_MAY_TOT + item.APP_JUN_TOT +item.APP_JUL_TOT + item.APP_AUG_TOT + item.APP_SEP_TOT +item.APP_OCT_TOT + item.APP_NOV_TOT + item.APP_DEC_TOT;
             return (
-            <tr key={index} data-item={item.ITEM_ID} style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >
-            <td key={index} data-item={item.ITEM_ID} title={item.ITEM_ID} onClick={this.OnRowClick.bind(this)} style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+            <tr key={index} data-item={item.ITEM_ID} style={{cursor:"pointer", backgroundColor: item.ITEM_ID == this.props.ItemId ? "#ffcccc" : 'white' }} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this) } >
+            <td key={index} data-item={item.ITEM_ID} title={item.ITEM_ID} onClick={this.OnRowClick.bind(this)} style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"}}>
               {item.ITEM_DESC}
             </td>
             <td  key={index} data-item={item.ITEM_ID} title={item.ITEM_ID} onClick={this.OnRowClick.bind(this)} style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"}} align="right">
@@ -351,6 +351,7 @@ public OnRowClick(e)
 { 
   //const itemId = e.currentTarget.getAttribute('data-item');
   const itemId = e.currentTarget.title;
+  this.setState({itemID:itemId});
   this.props.OnChangeItemId(itemId);
 
 }

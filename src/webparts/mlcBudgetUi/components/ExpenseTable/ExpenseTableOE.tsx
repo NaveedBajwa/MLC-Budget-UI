@@ -99,7 +99,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
     return this.state.items.map((item, index) => {
         return (
         <tr key={index} data-item={item.account} style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >
-        <td key={index} data-item={item.account} title={item.account}  style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+        <td key={index} data-item={item.account} title={item.account} onClick={this.OnRowClick.bind(this)} style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
           {item.account}
         </td>
         <td  key={index} data-item={item.account} title={item.account} onClick={this.OnRowClick.bind(this)} style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"}}>
@@ -327,25 +327,25 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
       } 
       return (
         <tr>
-        <td style={{width:"18%"}}>
+        <td style={{width:"10%"}}>
           &nbsp;
         </td>
-        <td style={{width:"18%"}}>
+        <td style={{width:"28%"}}>
           <b>Student No's: </b>
         </td>
-        <td style={{width:"9%"}}>
+        <td style={{width:"8%"}}>
           <TextField value={t1.toString()} style={{textAlign:"right"}} onChange={this.handleChangeQ1ST.bind(this)} id="Q1SN"/>
         </td>
-        <td style={{width:"9%"}}>
+        <td style={{width:"8%"}}>
         <TextField value={t2.toString()} style={{textAlign:"right"}}  id="Q2SN" onChange={this.handleChangeQ2ST.bind(this)}/>
         </td>
-        <td style={{width:"9%"}}>
+        <td style={{width:"8%"}}>
         <TextField value={t3.toString()} style={{textAlign:"right"}}  id="Q3SN" onChange={this.handleChangeQ3ST.bind(this)}/>
         </td>
-        <td style={{width:"9%"}}>
+        <td style={{width:"8%"}}>
         <TextField value={t4.toString()} style={{textAlign:"right"}}  id="Q4SN" onChange={this.handleChangeQ4ST.bind(this)}/>
         </td>
-        <td style={{width:"9%"}} colSpan={2}>
+        <td style={{width:"10%"}} colSpan={2}>
           <DefaultButton style={{backgroundColor:"#D3D3D3"}}  text="Update Student Nos" onClick={this.UpdateStudentNo.bind(this)} />
         </td>
         <td style={{width:"10%"}}>
@@ -384,31 +384,31 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
                 {this.renderStudentNumberData()}
 
                 <tr  style={{border:1, backgroundColor:"#D3D3D3",paddingTop:3}} >
-                  <td style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid", width:"10%"  }}>
                    <b>ACCOUNT CODE</b>
                   </td>
-                  <td style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid", width:"28%"  }}>
                     <b>ITEM CATEGORY</b>
                   </td>
-                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} > 
+                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"8%" }} > 
                     <b>TERM 1 </b>
                   </td>
-                  <td align="right" style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+                  <td align="right" style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"8%" }}>
                   <b>TERM 2 </b>
                   </td>
-                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid", width:"8%"  }}>
                   <b>TERM 3 </b>
                   </td>
-                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid", width:"8%"  }}>
                   <b> TERM 4 </b>
                   </td>
-                  <td align="right" style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"10%" }}>
                     <b>TOTAL </b>
                   </td>
-                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"10%" }}>
                     <b>APPR TOTAL</b>
                   </td>
-                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
+                  <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"10%" }}>
                     <b>2020 BUDGET</b>
                   </td>
                 </tr>

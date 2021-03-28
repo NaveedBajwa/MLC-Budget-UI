@@ -100,23 +100,23 @@ export class MiddleBody extends React.Component<IMiddleBodyProps, IMiddleBodySta
                     </h2>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <table>
-                          <tr>
-                            <td>
+                <tr style={{width:"100%"}}>
+                  <td style={{width:"30%"}}>
+                    <table style={{width:"100%"}}>
+                          <tr style={{width:"100%"}}>
+                            <td style={{width:"100%"}}>
                               <b>
                               Budget Category:
                               </b>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
+                          <tr style={{width:"100%"}}>
+                            <td style={{width:"100%"}}>
                               <b>
                                <ComboBox
                                 label=""
+                                style={{width:"100%"}}
                                 key={'BudgetCategory'}
-                                allowFreeform={true}
                                 autoComplete={true ? 'on' : 'off'}
                                 options={this.props.BudgetCategoryOptions}
                                 selectedKey={this.state.budgetCategoryId}
@@ -127,21 +127,20 @@ export class MiddleBody extends React.Component<IMiddleBodyProps, IMiddleBodySta
                         </tr>
                       </table>
                   </td>
-                  <td>
-                    <table>
-                      <tr>
-                        <td>
+                  <td style={{width:"50%"}}>
+                    <table style={{width:"100%"}}>
+                      <tr style={{width:"100%"}}>
+                        <td style={{width:"100%"}}>
                           <b>
                             Cost Centre:
                           </b>
                         </td>
                       </tr>
-                      <tr>
-                        <td>
+                      <tr style={{width:"100%"}}>
+                        <td style={{width:"100%"}}>
                           <b>
                            <ComboBox
                             key={'CostCenter'}
-                            allowFreeform={true}
                             autoComplete={true ? 'on' : 'off'}
                             options={this.props.CostCenterOptions}
                             selectedKey={this.state.costCenterId}
@@ -153,22 +152,21 @@ export class MiddleBody extends React.Component<IMiddleBodyProps, IMiddleBodySta
                     </table>
                   </td>
                   
-                  <td>
-                  <table>
-                          <tr>
-                            <td>
+                  <td style={{width:"20%"}}>
+                      <table style={{width:"100%"}}>
+                          <tr style={{width:"100%"}}>
+                            <td style={{width:"100%"}}>
                               <b>
                               Budget Year:
                               </b>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
+                          <tr style={{width:"100%"}}>
+                            <td style={{width:"100%"}}>
                               <b>
                                <ComboBox
                                 label=""
                                 key={'BudgetYear'}
-                                allowFreeform={true}
                                 autoComplete={true ? 'on' : 'off'}
                                 options={this.props.BudgetYearOptions}
                                 selectedKey={this.state.budgetYearText}
