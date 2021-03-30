@@ -30,6 +30,8 @@ import { AadHttpClient} from '@microsoft/sp-http';
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { Constants } from '../../Constants';
 import {EFItemSectionOE} from './EFItemSectionOE';
+import { EFItemSectionBM } from './EFItemSectionBM';
+import { EFItemSectionFA } from './EFItemSectionFA';
 
 export interface IEFItemSectionProps {
   budgetCategoryText:string;
@@ -113,9 +115,13 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
       return (
         <table style={{width:"100%"}}>
           <tr>
-          <td colSpan={2}>
-            Budget 2
-          </td>
+          <td colSpan={2} style={{width:"100%"}}>
+          <EFItemSectionBM ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+            costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
+            OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
+            OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId}  
+            BudgetCategoryOptions={this.props.BudgetCategoryOptions} CostCenterOptions={this.props.CostCenterOptions}  BudgetYearOptions={this.props.BudgetYearOptions}/>
+        </td>
         </tr>
       </table>
       );
@@ -128,7 +134,11 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
       <table style={{width:"100%"}}>
       <tr>
         <td colSpan={2}>
-        Budget 3
+        <EFItemSectionFA ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+            costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
+            OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
+            OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId}  
+            BudgetCategoryOptions={this.props.BudgetCategoryOptions} CostCenterOptions={this.props.CostCenterOptions}  BudgetYearOptions={this.props.BudgetYearOptions}/>
         </td>
       </tr>
       </table>
@@ -156,7 +166,11 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
       <table style={{width:"100%"}}>
       <tr>
         <td colSpan={2}>
-        Budget 5
+          <EFItemSectionFA ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+            costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
+            OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
+            OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId}  
+            BudgetCategoryOptions={this.props.BudgetCategoryOptions} CostCenterOptions={this.props.CostCenterOptions}  BudgetYearOptions={this.props.BudgetYearOptions}/>
         </td>
       </tr>
       </table>

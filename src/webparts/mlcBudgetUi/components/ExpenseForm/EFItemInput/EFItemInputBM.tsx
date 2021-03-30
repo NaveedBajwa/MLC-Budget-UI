@@ -30,9 +30,10 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { Constants } from '../../Constants';
 import { AadHttpClient , IHttpClientOptions} from '@microsoft/sp-http';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
+import { PopupWindowPosition } from '@microsoft/sp-property-pane';
 
 
-export interface IEFItemInputOEProps {
+export interface IEFItemInputBMProps {
   itemId:string;
   budgetAppClient : AadHttpClient;
   context: WebPartContext;
@@ -86,7 +87,7 @@ export interface InputItem {
   Comments:string;
 }
 
-export interface IEFItemInputOEState {
+export interface IEFItemInputBMState {
   item:any;
   itemId:string;
   ITEM_DESC:string;
@@ -133,6 +134,10 @@ export interface IEFItemInputOEState {
   AllowedBudgetYear:string;
   IsBudgetReadOnly:boolean;
   IsAdmin:boolean;
+  BMItemCategoryOption:IComboBoxOptionLoan[];
+  SelectedBM:string;  
+  otherTextBoxValue:string;
+  otherTextBoxDisable:boolean;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -142,7 +147,7 @@ export class IComboBoxOptionLoan implements IComboBoxOption
     }
 
 
-export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemInputOEState> {
+export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemInputBMState> {
 
   private _dragOptions = {
     moveMenuItemText: 'Move',
@@ -150,11 +155,12 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
     menu: ContextualMenu,
   };
 
-  constructor(props: IEFItemInputOEProps) {
+  constructor(props: IEFItemInputBMProps) {
     super(props);
     let priorityOptions:IComboBoxOptionLoan[] = this.getPriorityOptions();
     let approvalOptions:IComboBoxOptionLoan[] = this.getApprovalOptions();
-    this.state = {IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
+    let BMitems:IComboBoxOptionLoan[] = this.getBMItemCategoryOptions();
+    this.state = {otherTextBoxValue:"",otherTextBoxDisable:true,SelectedBM:"",BMItemCategoryOption:BMitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
     APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
     hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",  COMMENTS:"", APPROVED:"0", REASON:"",
@@ -389,13 +395,25 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
             <td style={{backgroundColor:"light blue", width:"100%"}}>
               <table style={{width:"100%"}}>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"100%"}}>
+                  <td style={{width:"100%"}} colSpan={2}>
                     <b>Item:</b>
                   </td>
                 </tr>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"100%"}}>
-                    <TextField value={this.state.ITEM_DESC} onChange={this.ChangeItemDesc.bind(this)} disabled={requestFieldsDisabled} />
+                  <td style={{width:"50%"}}>
+                    <ComboBox
+                    label=""
+                    key={'BMItems'}
+                    style={{width:"100%"}}
+                    autoComplete={true ? 'on' : 'off'}
+                    options={this.state.BMItemCategoryOption}
+                    selectedKey= {this.state.SelectedBM}
+                    disabled={requestFieldsDisabled}
+                    onChange ={this.comboBMItemChange.bind(this)}
+                    />
+                  </td>
+                  <td style={{width:"50%"}}>
+                    <TextField value={this.state.ITEM_DESC} onChange={this.ChangeItemDesc.bind(this)} disabled={(requestFieldsDisabled || this.state.otherTextBoxDisable)} />
                   </td>
                 </tr>
               </table>
@@ -449,7 +467,7 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
                     <b>Quarterly</b>
                   </td>
                   <td>&nbsp;</td>
-                  <td align="right" style={{width:"17%"}} title="Click to Fill-down Amounts"  onClick={this.copyApproved.bind(this)}>
+                  <td align="right" style={{width:"17%", cursor:"pointer"}} title="Click to Fill-down Amounts"  onClick={this.copyApproved.bind(this)}>
                         <b>Approved</b>    
                   </td>
                   <td align="right" style={{width:"17%"}}>
@@ -891,6 +909,49 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
     );
   }
 
+  public getBMItemCategoryOptions(): IComboBoxOptionLoan[]
+  {
+    let BClist:any =[];
+    let ComOptions:IComboBoxOptionLoan[] = [];
+    //let i=this.props.itemCategoryId;
+    let response1 : any = this.GetBMItemCategoriesWS().then(
+      response => {
+        response1 = response;
+        response.map(itemY=>{
+
+          let comOption = new IComboBoxOptionLoan();
+          comOption.key = itemY.bm_item1; 
+          comOption.text = itemY.bm_item1;
+          ComOptions = ComOptions.concat(comOption);
+        }); 
+        let check = "0";
+        this.setState({BMItemCategoryOption: ComOptions});
+        
+      }
+    );
+    return ComOptions;
+  }
+
+
+  public async GetBMItemCategoriesWS(): Promise<any[]> {
+    let WSS = Constants.apiURL + '/GetAllBMItems';
+    try{
+    return await this.props.budgetAppClient
+    .get(WSS , AadHttpClient.configurations.v1)
+    .then((response: HttpClientResponse) => {
+      return response.json();
+    })
+    .then(jsonResponse => {
+      return jsonResponse;
+    }) as Promise<any>;
+    } catch (e )
+      {
+        console.error(e);
+        let i=0;
+        //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+      }
+    }
+
   public copyApproved()
   {
     this.setState({APP_JAN_TOT:this.state.JAN_TOT,APP_FEB_TOT:this.state.FEB_TOT,APP_MAR_TOT:this.state.MAR_TOT,APP_APR_TOT:this.state.APR_TOT,APP_MAY_TOT:this.state.MAY_TOT,APP_JUN_TOT:this.state.JUN_TOT,APP_JUL_TOT:this.state.JUL_TOT,APP_AUG_TOT:this.state.AUG_TOT,APP_SEP_TOT:this.state.SEP_TOT,APP_OCT_TOT:this.state.OCT_TOT,APP_NOV_TOT:this.state.NOV_TOT,APP_DEC_TOT:this.state.DEC_TOT
@@ -903,7 +964,7 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
     this.setState({
           JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
           APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
-          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:""});
+          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedBM:""});
           this.props.OnChangeItemId('0');
   }
 
@@ -970,7 +1031,8 @@ public async DeleteItemWS()
 
   public UpdateItem()
   {
-    if(this.state.ITEM_DESC.length==0)
+    if(this.state.ITEM_DESC.length==0 && 
+      (this.state.SelectedBM == "Other"))
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
@@ -987,8 +1049,9 @@ public async DeleteItemWS()
           //this.setItemsStudentTotal();
           this.setState({ ItemsAdded:(this.state.ItemsAdded +1)});
           this.NewItem();
-          //window.scrollTo(0,0);
-          //document.getElementById("[data-automation-id='CanvasZone']").childDiv.current.scrollIntoView({ behavior: 'smooth' });
+          //window.scroll(0,0);
+          window.scrollTo(0,0);
+          //$("div[data-automation-id='CanvasZone']")
           //$(#s4-workspace).scroll(0,0);
         }
       }
@@ -999,7 +1062,16 @@ public async DeleteItemWS()
 public async UpdateItemWS()
 {
   let WSS = Constants.apiURL + '/AddItemOE';
-
+  let itemText = "";
+  if(this.state.SelectedBM == "Painting" || this.state.SelectedBM =="Lighting" || this.state.SelectedBM =="Data Cabling" || this.state.SelectedBM == "Electrical Cabling")
+  {
+    itemText = this.state.SelectedBM;
+    //textboxValue = "";
+    //innerItemcomboValue = response1.ITEM_DESC;
+  }
+  else{
+    itemText = this.state.ITEM_DESC;
+  }
 
   const requestOptions: IHttpClientOptions = 
   {        
@@ -1011,11 +1083,11 @@ public async UpdateItemWS()
     body: JSON.stringify(
     {
       ITEM_ID:this.state.itemId,
-      ITEM_DESC: this.state.ITEM_DESC,
+      ITEM_DESC: itemText,
       PRIORITY:this.state.PRIORITY,
       ACCOUNT_NO: this.state.AccountNumberId,
       COST_CENTRE: this.state.costCenterId,
-      EXPENSE_CAT: this.state.ExpenseCategoryId,
+      EXPENSE_CAT: 2 ,
       YEAR_USED: this.props.YearId,
       JAN_TOT:this.state.JAN_TOT,
       FEB_TOT:this.state.FEB_TOT,
@@ -1111,6 +1183,23 @@ public async UpdateItemWS()
     this.setState({PRIORITY:Cmb_Selected.key });
   }
 
+  public comboBMItemChange(evt,Cmb_Selected)
+  {
+    //this.internalSelectedComboValue = Cmb_Selected.key;
+    let innerTextboxDisable = true;
+    let textboxValue = "";
+    if(Cmb_Selected.key == "Painting" || Cmb_Selected.key =="Lighting" || Cmb_Selected.key =="Data Cabling" || Cmb_Selected.key == "Electrical Cabling")
+        {
+          innerTextboxDisable = true;
+          textboxValue = "";
+          //innerItemcomboValue = response1.ITEM_DESC;
+        }
+        else{
+          innerTextboxDisable = false;
+        }
+    this.setState({SelectedBM:Cmb_Selected.key,otherTextBoxDisable:innerTextboxDisable, ITEM_DESC:textboxValue });
+  }
+
   private _showDialog = (): void => {
     this.setState({ hideDialog: false });
   }
@@ -1176,11 +1265,31 @@ public async UpdateItemWS()
     let response1 : any = this.getItemWS(itemId).then(
       response => {
         response1 = response;
-        
+        let innerItemDesc = "";
+        let innerItemcomboValue = "";
+        let textboxDisabled = true;
+        if(response1.ITEM_DESC == "Painting" || response1.ITEM_DESC =="Lighting" || response1.ITEM_DESC =="Data Cabling" || response1.ITEM_DESC == "Electrical Cabling")
+        {
+          innerItemDesc = "";
+          innerItemcomboValue = response1.ITEM_DESC;
+          textboxDisabled = true;
+        }
+        else if (itemId == '0')
+        {
+          innerItemcomboValue = "";  
+          textboxDisabled = true;
+        }
+        else {
+          innerItemDesc = response1.ITEM_DESC;
+          innerItemcomboValue = "Other";
+          textboxDisabled = false;
+        }
+    
+
         this.setState({itemId:itemId, item: response, 
           JAN_TOT:response1.JAN_TOT,FEB_TOT:response1.FEB_TOT,MAR_TOT:response1.MAR_TOT,APR_TOT:response1.APR_TOT,MAY_TOT:response1.MAY_TOT,JUN_TOT:response1.JUN_TOT,JUL_TOT:response1.JUL_TOT,AUG_TOT:response1.AUG_TOT,SEP_TOT:response1.SEP_TOT,OCT_TOT:response1.OCT_TOT,NOV_TOT:response1.NOV_TOT,DEC_TOT:response1.DEC_TOT,
           APP_JAN_TOT:response1.APP_JAN_TOT,APP_FEB_TOT:response1.APP_FEB_TOT,APP_MAR_TOT:response1.APP_MAR_TOT,APP_APR_TOT:response1.APP_APR_TOT,APP_MAY_TOT:response1.APP_MAY_TOT,APP_JUN_TOT:response1.APP_JUN_TOT,APP_JUL_TOT:response1.APP_JUL_TOT,APP_AUG_TOT:response1.APP_AUG_TOT,APP_SEP_TOT:response1.APP_SEP_TOT,APP_OCT_TOT:response1.APP_OCT_TOT,APP_NOV_TOT:response1.APP_NOV_TOT,APP_DEC_TOT:response1.APP_DEC_TOT,
-          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:response1.ITEM_DESC,PRIORITY:response1.PRIORITY
+          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:innerItemDesc,PRIORITY:response1.PRIORITY, SelectedBM: innerItemcomboValue, otherTextBoxDisable:textboxDisabled
 
         });
         
