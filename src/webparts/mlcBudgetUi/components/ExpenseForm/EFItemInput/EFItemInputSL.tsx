@@ -33,7 +33,7 @@ import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dia
 import { PopupWindowPosition } from '@microsoft/sp-property-pane';
 
 
-export interface IEFItemInputFAProps {
+export interface IEFItemInputSLProps {
   itemId:string;
   budgetAppClient : AadHttpClient;
   context: WebPartContext;
@@ -87,7 +87,7 @@ export interface InputItem {
   Comments:string;
 }
 
-export interface IEFItemInputFAState {
+export interface IEFItemInputSLState {
   item:any;
   itemId:string;
   ITEM_DESC:string;
@@ -134,8 +134,8 @@ export interface IEFItemInputFAState {
   AllowedBudgetYear:string;
   IsBudgetReadOnly:boolean;
   IsAdmin:boolean;
-  FAItemCategoryOption:IComboBoxOptionLoan[];
-  SelectedFA:string;  
+  SLItemCategoryOption:IComboBoxOptionLoan[];
+  SelectedSL:string;  
   otherTextBoxValue:string;
   otherTextBoxDisable:boolean;
 }
@@ -147,7 +147,7 @@ export class IComboBoxOptionLoan implements IComboBoxOption
     }
 
 
-export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemInputFAState> {
+export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemInputSLState> {
 
   private _dragOptions = {
     moveMenuItemText: 'Move',
@@ -155,12 +155,12 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
     menu: ContextualMenu,
   };
 
-  constructor(props: IEFItemInputFAProps) {
+  constructor(props: IEFItemInputSLProps) {
     super(props);
     let priorityOptions:IComboBoxOptionLoan[] = this.getPriorityOptions();
     let approvalOptions:IComboBoxOptionLoan[] = this.getApprovalOptions();
-    let FAitems:IComboBoxOptionLoan[] = this.getFAItemCategoryOptions();
-    this.state = {otherTextBoxValue:"",otherTextBoxDisable:true,SelectedFA:"",FAItemCategoryOption:FAitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
+    let SLitems:IComboBoxOptionLoan[] = this.getSLItemCategoryOptions();
+    this.state = {otherTextBoxValue:"",otherTextBoxDisable:true,SelectedSL:"",SLItemCategoryOption:SLitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
     APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
     hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",  COMMENTS:"", APPROVED:"0", REASON:"",
@@ -403,13 +403,13 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
                   <td style={{width:"50%"}}>
                     <ComboBox
                     label=""
-                    key={'FAItems'}
+                    key={'SLItems'}
                     style={{width:"100%"}}
                     autoComplete={true ? 'on' : 'off'}
-                    options={this.state.FAItemCategoryOption}
-                    selectedKey= {this.state.SelectedFA}
+                    options={this.state.SLItemCategoryOption}
+                    selectedKey= {this.state.SelectedSL}
                     disabled={requestFieldsDisabled}
-                    onChange ={this.comboFAItemChange.bind(this)}
+                    onChange ={this.comboSLItemChange.bind(this)}
                     />
                   </td>
                   <td style={{width:"50%"}}>
@@ -909,23 +909,23 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
     );
   }
 
-  public getFAItemCategoryOptions(): IComboBoxOptionLoan[]
+  public getSLItemCategoryOptions(): IComboBoxOptionLoan[]
   {
     let BClist:any =[];
     let ComOptions:IComboBoxOptionLoan[] = [];
     //let i=this.props.itemCategoryId;
-    let response1 : any = this.GetFAItemCategoriesWS().then(
+    let response1 : any = this.GetSLItemCategoriesWS().then(
       response => {
         response1 = response;
         response.map(itemY=>{
 
           let comOption = new IComboBoxOptionLoan();
-          comOption.key = itemY.sdfa_item1; 
-          comOption.text = itemY.sdfa_item1;
+          comOption.key = itemY.pd_item; 
+          comOption.text = itemY.pd_item;
           ComOptions = ComOptions.concat(comOption);
         }); 
         let check = "0";
-        this.setState({FAItemCategoryOption: ComOptions});
+        this.setState({SLItemCategoryOption: ComOptions});
         
       }
     );
@@ -933,8 +933,8 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
   }
 
 
-  public async GetFAItemCategoriesWS(): Promise<any[]> {
-    let WSS = Constants.apiURL + '/GetAllSDFAtems';
+  public async GetSLItemCategoriesWS(): Promise<any[]> {
+    let WSS = Constants.apiURL + '/GetAllPDItems';
     try{
     return await this.props.budgetAppClient
     .get(WSS , AadHttpClient.configurations.v1)
@@ -964,7 +964,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
     this.setState({
           JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
           APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
-          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedFA:""});
+          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedSL:""});
           this.props.OnChangeItemId('0');
   }
 
@@ -1032,7 +1032,7 @@ public async DeleteItemWS()
   public UpdateItem()
   {
     if(this.state.ITEM_DESC.length==0 && 
-      (this.state.SelectedFA == "Other"))
+      (this.state.SelectedSL == "Other"))
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
@@ -1063,11 +1063,11 @@ public async UpdateItemWS()
 {
   let WSS = Constants.apiURL + '/AddItemOE';
   let itemText = "";
-  if(this.state.SelectedFA== "Carpets" || this.state.SelectedFA == "Whiteboards" || this.state.SelectedFA == "Pinboards" || this.state.SelectedFA == "Chairs" || this.state.SelectedFA == "Workstations" ||
-  this.state.SelectedFA == "Desks" || this.state.SelectedFA == "Curtains" || this.state.SelectedFA == "Blinds" || this.state.SelectedFA == "Filing Cabinets" || this.state.SelectedFA == "Refrigerators" ||
-  this.state.SelectedFA == "Book Cases" || this.state.SelectedFA == "Shelving")
+  if(this.state.SelectedSL== "External technology training" || this.state.SelectedSL == "CFA training" || this.state.SelectedSL == "Health and safety training" || this.state.SelectedSL == "First Aid training" || this.state.SelectedSL == "Outdoors skills training" ||
+  this.state.SelectedSL == "Management training" || this.state.SelectedSL == "General workplace skills training" || this.state.SelectedSL == "Consultancies" || this.state.SelectedSL == "Presenters' fees" || this.state.SelectedSL == "Counselling/Pastoral Care training" ||
+  this.state.SelectedSL == "Teaching skills development/training" || this.state.SelectedSL == "VCE/IB/VET briefings" || this.state.SelectedSL == "Seminars/Conferences" )
   {
-    itemText = this.state.SelectedFA;
+    itemText = this.state.SelectedSL;
     //textboxValue = "";
     //innerItemcomboValue = response1.ITEM_DESC;
   }
@@ -1089,7 +1089,7 @@ public async UpdateItemWS()
       PRIORITY:this.state.PRIORITY,
       ACCOUNT_NO: this.state.AccountNumberId,
       COST_CENTRE: this.state.costCenterId,
-      EXPENSE_CAT: 5 ,
+      EXPENSE_CAT: 3 ,
       YEAR_USED: this.props.YearId,
       JAN_TOT:this.state.JAN_TOT,
       FEB_TOT:this.state.FEB_TOT,
@@ -1185,14 +1185,14 @@ public async UpdateItemWS()
     this.setState({PRIORITY:Cmb_Selected.key });
   }
 
-  public comboFAItemChange(evt,Cmb_Selected)
+  public comboSLItemChange(evt,Cmb_Selected)
   {
     //this.internalSelectedComboValue = Cmb_Selected.key;
     let innerTextboxDisable = true;
     let textboxValue = "";
-    if(Cmb_Selected.key  == "Carpets" || Cmb_Selected.key  == "Whiteboards" || Cmb_Selected.key  == "Pinboards" || Cmb_Selected.key  == "Chairs" || Cmb_Selected.key  == "Workstations" ||
-        Cmb_Selected.key  == "Desks" || Cmb_Selected.key  == "Curtains" || Cmb_Selected.key  == "Blinds" || Cmb_Selected.key  == "Filing Cabinets" || Cmb_Selected.key  == "Refrigerators" ||
-        Cmb_Selected.key  == "Book Cases" || Cmb_Selected.key  == "Shelving")
+    if(Cmb_Selected.key  == "External technology training" || Cmb_Selected.key  == "CFA training" || Cmb_Selected.key  == "Health and safety training" || Cmb_Selected.key  == "First Aid training" || Cmb_Selected.key  == "Outdoors skills training" ||
+        Cmb_Selected.key  == "Management training" || Cmb_Selected.key  == "General workplace skills training" || Cmb_Selected.key  == "Consultancies" || Cmb_Selected.key  == "Presenters' fees" || Cmb_Selected.key  == "Counselling/Pastoral Care training" ||
+        Cmb_Selected.key  == "Teaching skills development/training" || Cmb_Selected.key  == "VCE/IB/VET briefings" || Cmb_Selected.key  == "Seminars/Conferences" )
         {
           innerTextboxDisable = true;
           textboxValue = "";
@@ -1201,7 +1201,7 @@ public async UpdateItemWS()
         else{
           innerTextboxDisable = false;
         }
-    this.setState({SelectedFA:Cmb_Selected.key,otherTextBoxDisable:innerTextboxDisable, ITEM_DESC:textboxValue });
+    this.setState({SelectedSL:Cmb_Selected.key,otherTextBoxDisable:innerTextboxDisable, ITEM_DESC:textboxValue });
   }
 
   private _showDialog = (): void => {
@@ -1277,9 +1277,9 @@ public async UpdateItemWS()
           innerItemcomboValue = "";  
           textboxDisabled = true;
         }
-        else if(response1.ITEM_DESC == "Carpets" || response1.ITEM_DESC == "Whiteboards" || response1.ITEM_DESC == "Pinboards" || response1.ITEM_DESC == "Chairs" || response1.ITEM_DESC == "Workstations" ||
-            response1.ITEM_DESC == "Desks" || response1.ITEM_DESC == "Curtains" || response1.ITEM_DESC == "Blinds" || response1.ITEM_DESC == "Filing Cabinets" || response1.ITEM_DESC == "Refrigerators" ||
-            response1.ITEM_DESC == "Book Cases" || response1.ITEM_DESC == "Shelving" )
+        else if(response1.ITEM_DESC == "External technology training" || response1.ITEM_DESC == "CFA training" || response1.ITEM_DESC == "Health and safety training" || response1.ITEM_DESC == "First Aid training" || response1.ITEM_DESC == "Outdoors skills training" ||
+            response1.ITEM_DESC == "Management training" || response1.ITEM_DESC == "General workplace skills training" || response1.ITEM_DESC == "Consultancies" || response1.ITEM_DESC == "Presenters' fees" || response1.ITEM_DESC == "Counselling/Pastoral Care training" ||
+            response1.ITEM_DESC == "Teaching skills development/training" || response1.ITEM_DESC == "VCE/IB/VET briefings" || response1.ITEM_DESC == "Seminars/Conferences" )
         {
           innerItemDesc = "";
           innerItemcomboValue = response1.ITEM_DESC;
@@ -1295,7 +1295,7 @@ public async UpdateItemWS()
         this.setState({itemId:itemId, item: response, 
           JAN_TOT:response1.JAN_TOT,FEB_TOT:response1.FEB_TOT,MAR_TOT:response1.MAR_TOT,APR_TOT:response1.APR_TOT,MAY_TOT:response1.MAY_TOT,JUN_TOT:response1.JUN_TOT,JUL_TOT:response1.JUL_TOT,AUG_TOT:response1.AUG_TOT,SEP_TOT:response1.SEP_TOT,OCT_TOT:response1.OCT_TOT,NOV_TOT:response1.NOV_TOT,DEC_TOT:response1.DEC_TOT,
           APP_JAN_TOT:response1.APP_JAN_TOT,APP_FEB_TOT:response1.APP_FEB_TOT,APP_MAR_TOT:response1.APP_MAR_TOT,APP_APR_TOT:response1.APP_APR_TOT,APP_MAY_TOT:response1.APP_MAY_TOT,APP_JUN_TOT:response1.APP_JUN_TOT,APP_JUL_TOT:response1.APP_JUL_TOT,APP_AUG_TOT:response1.APP_AUG_TOT,APP_SEP_TOT:response1.APP_SEP_TOT,APP_OCT_TOT:response1.APP_OCT_TOT,APP_NOV_TOT:response1.APP_NOV_TOT,APP_DEC_TOT:response1.APP_DEC_TOT,
-          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:innerItemDesc,PRIORITY:response1.PRIORITY, SelectedFA: innerItemcomboValue, otherTextBoxDisable:textboxDisabled
+          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:innerItemDesc,PRIORITY:response1.PRIORITY, SelectedSL: innerItemcomboValue, otherTextBoxDisable:textboxDisabled
 
         });
         

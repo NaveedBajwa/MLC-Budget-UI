@@ -32,6 +32,7 @@ import { Constants } from '../../Constants';
 import {EFItemSectionOE} from './EFItemSectionOE';
 import { EFItemSectionBM } from './EFItemSectionBM';
 import { EFItemSectionFA } from './EFItemSectionFA';
+import { EFItemSectionSL } from './EFItemSectionSL';
 
 export interface IEFItemSectionProps {
   budgetCategoryText:string;
@@ -134,7 +135,7 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
       <table style={{width:"100%"}}>
       <tr>
         <td colSpan={2}>
-        <EFItemSectionFA ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
+        <EFItemSectionSL ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
             costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
             OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
             OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)} itemCategoryId={this.props.itemCategoryId}  

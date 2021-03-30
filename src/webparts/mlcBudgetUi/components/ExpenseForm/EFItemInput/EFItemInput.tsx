@@ -33,6 +33,7 @@ import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dia
 import { EFItemInputOE } from './EFItemInputOE';
 import { EFItemInputBM } from './EFItemInputBM';
 import { EFItemInputFA } from './EFItemInputFA';
+import { EFItemInputSL } from './EFItemInputSL';
 
 
 export interface IEFItemInputProps {
@@ -79,6 +80,17 @@ export class EFItemInput extends React.Component<IEFItemInputProps, IEFItemInput
     return(
       <div>
             <EFItemInputBM  OnChangeItemId={this.props.OnChangeItemId.bind(this)} itemId={this.props.itemId}  budgetAppClient={this.props.budgetAppClient} context={this.props.context} 
+              costCenterId={this.props.costCenterId} AccountNumberId={this.props.itemCategoryId} YearId={this.props.budgetYearId} 
+              refreshThis={this.props.refreshThis.bind(this)} />
+      </div>
+    
+    );
+    }
+    else if(this.props.budgetCategoryId == "3")
+    {
+    return(
+      <div>
+            <EFItemInputSL  OnChangeItemId={this.props.OnChangeItemId.bind(this)} itemId={this.props.itemId}  budgetAppClient={this.props.budgetAppClient} context={this.props.context} 
               costCenterId={this.props.costCenterId} AccountNumberId={this.props.itemCategoryId} YearId={this.props.budgetYearId} 
               refreshThis={this.props.refreshThis.bind(this)} />
       </div>
