@@ -59,7 +59,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let BudgetCategoryOption:IComboBoxOptionLoan[] = [];
     let CostCenterOption:IComboBoxOptionLoan[] = [];
     let BudgetYearOption:IComboBoxOptionLoan[] = [];
-    this.state = {itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"1",
+    this.state = {itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
                     budgetYearText:"2021", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
                     CostCenterOptions:CostCenterOption, BudgetYearOptions:BudgetYearOption};
  }
@@ -229,7 +229,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     //}
     //else 
     //{
-      this.setState({budgetCategoryId:selectedCategoryId});
+      this.setState({budgetCategoryId:selectedCategoryId,itemId:'0'});
     //}
     
   }

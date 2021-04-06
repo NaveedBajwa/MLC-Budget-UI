@@ -32,7 +32,7 @@ import { Constants } from '../../Constants';
 import { getItemStyles } from 'office-ui-fabric-react/lib/components/ContextualMenu/ContextualMenu.classNames';
 
 
-export interface IEFItemSectionOEProps {
+export interface IEFItemSectionTCProps {
   budgetCategoryText:string;
   budgetCategoryId:string;
   costCenterText:string;
@@ -55,7 +55,7 @@ export interface IEFItemSectionOEProps {
   ItemId:string;
 }
 
-export interface IEFItemSectionOEState {
+export interface IEFItemSectionTCState {
   budgetCategoryText:string;
   budgetCategoryId:string;
   costCenterText:string;
@@ -76,12 +76,12 @@ export class IComboBoxOptionLoan implements IComboBoxOption
     }
 
 
-export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFItemSectionOEState> {
+export class EFItemSectionTC extends React.Component<IEFItemSectionTCProps, IEFItemSectionTCState> {
   
   public requestTotal:number;
   public approvedTotal:number;
 
-  constructor(props: IEFItemSectionOEProps) {
+  constructor(props: IEFItemSectionTCProps) {
     super(props);
 
     //this.getItemCategoryOptions.bind(this);
@@ -151,7 +151,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
                     key={'ItemCategory'}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.ItemCategoryOption}
-                    selectedKey={this.props.itemCategoryId}
+                    selectedKey={this.props.itemCategoryId.toString()}
                     onChange={this.OnItemCategoryChange.bind(this)}
                   />
                 </td>
@@ -187,7 +187,6 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
 
     public OnBudgetCategoryChange(evt,Cmb_Selected)
     {
-      
         this.props.OnBudgetCategoryChange(Cmb_Selected.key);
         //this.innerItemCategoryChange(Cmb_Selected.key);
         
@@ -200,6 +199,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
         //this.innerItemCategoryChange(Cmb_Selected.key);
         
         this.setItems(Cmb_Selected.key);
+        this.props.OnChangeitemCategoryId(Cmb_Selected.key);
         this.props.OnChangeItemId('0');
     }
 
@@ -214,8 +214,8 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
         response.map(itemY=>{
 
           let comOption = new IComboBoxOptionLoan();
-          comOption.key = itemY.ItemCategoryId; 
-          comOption.text = itemY.ItemCategoryText;
+          comOption.key = itemY.network_cat_id.toString(); 
+          comOption.text = itemY.network_cat;
           ComOptions = ComOptions.concat(comOption);
         }); 
         let check = "0";
@@ -228,7 +228,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
 
 
   public async GetItemCategoriesWS(): Promise<any[]> {
-    let WSS = Constants.apiURL + '/GetDistinctOEItemCategoryByBudgetCategory_CostCentre_FY?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
+    let WSS = Constants.apiURL + '/GetAllNetworkCategories?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
         this.props.costCenterId +'&FY=' + this.props.budgetYearText;
     try{
     return await this.props.budgetAppClient
@@ -263,7 +263,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
     {
       return [];
     }
-    let WSS = Constants.apiURL + '/GetOEItemsByBudgetCategory_CostCentre_FY_ItemCategory?budgetCategory=' + this.state.budgetCategoryId + '&costCenter='+ 
+    let WSS = Constants.apiURL + '/GetTCItemsByBudgetCategory_CostCentre_FY_ItemCategory?budgetCategory=' + this.state.budgetCategoryId + '&costCenter='+ 
         this.props.costCenterId +'&FY=' + this.props.budgetYearText + '&ItemCategory=' + ItemCategoryKey;
     try{
     return await this.props.budgetAppClient

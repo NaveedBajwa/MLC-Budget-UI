@@ -79,7 +79,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   
   constructor(props: IExpenseTableOEProps) {
     super(props);
-    this.state = {studtot_id:"0", hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again" , Q1ST:0, Q2ST:0, Q3ST:0, Q4ST:0,itemsStudentNumber:null, trColor:"white",items:[],itemsTotal:[],itemsStudentTotal:[], costCenterId:this.props.costCenterId,budgetYearId:this.props.budgetYearId,BudgetYearText:this.props.budgetCategoryText};
+    this.state = {studtot_id:"0", hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again" , Q1ST:0, Q2ST:0, Q3ST:0, Q4ST:0,itemsStudentNumber:null, trColor:"white",items:[],itemsTotal:[],itemsStudentTotal:[], costCenterId:this.props.costCenterId,budgetYearId:this.props.budgetYearId,BudgetYearText:this.props.budgetYearText};
   }
 
   private _dragOptions = {
@@ -96,6 +96,40 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   }
 
   public renderTableData() {
+    if(this.state.items ==null || this.state.items.length == 0)
+    {
+      return(
+        <tr   >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                        </tr>
+      );
+    }
     return this.state.items.map((item, index) => {
         return (
         <tr key={index} data-item={item.account} style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >
@@ -361,7 +395,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   public render(): JSX.Element {
     if(this.props.costCenterId != this.state.costCenterId && this.props.costCenterId != "abc")
     {
-      this.setState({costCenterId:this.props.costCenterId,hideDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically. "});
+      this.setState({costCenterId:this.props.costCenterId,hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically. "});
       this.setItems();
       this.setItemsTotal();
       this.setItemsStudentTotal();
@@ -369,7 +403,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
     }
     if(this.props.budgetYearText != this.state.BudgetYearText && this.props.costCenterId != "abc")
     {
-      this.setState({budgetYearId:this.props.budgetYearId, BudgetYearText:this.props.budgetYearText,hideDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
+      this.setState({budgetYearId:this.props.budgetYearId, BudgetYearText:this.props.budgetYearText,hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
       this.setItems();
       this.setItemsTotal();
       this.setItemsStudentTotal();
@@ -409,7 +443,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
                     <b>APPR TOTAL</b>
                   </td>
                   <td align="right" style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" , width:"10%" }}>
-                    <b>2020 BUDGET</b>
+                    <b>{((parseInt(this.state.BudgetYearText))-1)} BUDGET</b>
                   </td>
                 </tr>
 
@@ -436,8 +470,8 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
                      </DialogFooter>
                      </Dialog>
                      <Dialog hidden={this.state.hideMsgDialog} onDismiss={this._closeDialog} 
-                              dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
+                              dialogContentProps={{type: DialogType.normal,title: 'Loading Data', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
                      </Dialog>
                      </div>
@@ -450,14 +484,14 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   }
 
   private _closeDialog = (): void => {
-    this.setState({ hideDialog: true });
+    this.setState({ hideDialog: true,hideMsgDialog:true });
   }
   public setItems()
   {
     let response1 : any = this.SetItemsWS().then(
       response => {
         response1 = response;
-        this.setState({items: response,hideDialog: true});
+        this.setState({items: response,hideDialog: true,hideMsgDialog:true});
       }
     );
   }

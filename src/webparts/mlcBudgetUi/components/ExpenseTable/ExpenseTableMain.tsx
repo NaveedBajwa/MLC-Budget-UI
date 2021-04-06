@@ -91,7 +91,7 @@ export class ExpenseTableMain extends React.Component<IExpenseTableMainProps, IE
         <tr>
         <td colSpan={2} style={{width:"100%"}}>
           <ExpenseTableOE budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
-            costCenterId={this.props.costCenterId} budgetYearId={this.props.costCenterText} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
+            costCenterId={this.props.costCenterId} budgetYearId={this.props.budgetYearId} budgetYearText={this.props.budgetYearText} OnBudgetCategoryChange={this.props.OnBudgetCategoryChange.bind(this)}
             OnChangeCostCenter={this.props.OnChangeCostCenter.bind(this)} OnChangeYear={this.props.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.props.OnChangeExpenseInputView.bind(this)} 
             OnChangeitemCategoryId={this.props.OnChangeitemCategoryId.bind(this)}  />
         </td>

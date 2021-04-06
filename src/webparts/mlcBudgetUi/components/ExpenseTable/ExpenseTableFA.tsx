@@ -88,7 +88,34 @@ export class ExpenseTableFA extends React.Component<IExpenseTableFAProps, IExpen
   }
 
   public renderTableData() {
-    
+    if(this.state.items ==null || this.state.items.length == 0)
+    {
+      return(
+        <tr   >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                        </tr>
+      );
+    }
     return this.state.items.map((item, index) => {
         return (
         <tr  style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >

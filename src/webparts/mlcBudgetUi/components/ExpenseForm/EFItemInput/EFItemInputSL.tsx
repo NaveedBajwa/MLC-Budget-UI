@@ -138,6 +138,8 @@ export interface IEFItemInputSLState {
   SelectedSL:string;  
   otherTextBoxValue:string;
   otherTextBoxDisable:boolean;
+  AttendanceOption:IComboBoxOptionLoan[];
+  SelectedAttendance:string;  
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -160,7 +162,8 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
     let priorityOptions:IComboBoxOptionLoan[] = this.getPriorityOptions();
     let approvalOptions:IComboBoxOptionLoan[] = this.getApprovalOptions();
     let SLitems:IComboBoxOptionLoan[] = this.getSLItemCategoryOptions();
-    this.state = {otherTextBoxValue:"",otherTextBoxDisable:true,SelectedSL:"",SLItemCategoryOption:SLitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
+    let AttendOption:IComboBoxOptionLoan[] = this.getAttendanceOptions();
+    this.state = {AttendanceOption:AttendOption,SelectedAttendance:"1",  otherTextBoxValue:"",otherTextBoxDisable:true,SelectedSL:"",SLItemCategoryOption:SLitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
     APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
     hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",  COMMENTS:"", APPROVED:"0", REASON:"",
@@ -424,18 +427,19 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
             <td style={{width:"100%"}}>
               <table style={{width:"100%"}}>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"15%"}}>
+                  <td style={{width:"50%"}}>
                     <b>Priority:</b>
                   </td>
-                  <td style={{width:"85%"}}>
-                    &nbsp;
+                  <td style={{width:"50%"}}>
+                    <b>Attendance:</b>
                   </td>
                 </tr>
                 <tr style={{width:"100%"}}>
-                  <td style={{width:"15%"}}>
+                  <td>
                     <ComboBox
                     label=""
                     key={'Priority'}
+                    style={{width:"35%"}}
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.priorityOptions}
                     selectedKey= {strPriority}
@@ -443,8 +447,17 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
                     onChange ={this.comboPRIORITY.bind(this)}
                     />
                   </td>
-                  <td style={{width:"85%"}}>
-                  &nbsp;
+                  <td  >
+                  <ComboBox
+                    label=""
+                    key={'Attendance'}
+                    style={{width:"35%"}}
+                    autoComplete={true ? 'on' : 'off'}
+                    options={this.state.AttendanceOption}
+                    selectedKey= {this.state.SelectedAttendance}
+                    disabled={requestFieldsDisabled}
+                    onChange ={this.comboAttendance.bind(this)}
+                    />
                   </td>
                 </tr>
               </table>
@@ -920,8 +933,8 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
         response.map(itemY=>{
 
           let comOption = new IComboBoxOptionLoan();
-          comOption.key = itemY.pd_item; 
-          comOption.text = itemY.pd_item;
+          comOption.key = itemY.pd_item1; 
+          comOption.text = itemY.pd_item1;
           ComOptions = ComOptions.concat(comOption);
         }); 
         let check = "0";
@@ -964,7 +977,7 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
     this.setState({
           JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
           APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
-          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedSL:""});
+          COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedSL:"",SelectedAttendance:"1"});
           this.props.OnChangeItemId('0');
   }
 
@@ -1035,6 +1048,12 @@ public async DeleteItemWS()
       (this.state.SelectedSL == "Other"))
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
+      return 1;
+    }
+
+    if(this.state.SelectedSL == '')
+    {
+      this.setState({ hideDialog: false, dialogBoxMsg: "Please select an Item"});
       return 1;
     }
 
@@ -1124,7 +1143,8 @@ public async UpdateItemWS()
       APPROVED_DATE: "2020-03-21T23:37:35.169Z",
       MODIFIED_BY: "",
       MODIFIED_DATE: "2020-03-21T23:37:35.169Z",
-      SALARY_SYSTEM: 0
+      SALARY_SYSTEM: 0,
+      QUANTITY:parseInt(this.state.SelectedAttendance)
     }
     )
   };
@@ -1183,6 +1203,12 @@ public async UpdateItemWS()
   {
     //this.internalSelectedComboValue = Cmb_Selected.key;
     this.setState({PRIORITY:Cmb_Selected.key });
+  }
+
+  public comboAttendance(evt,Cmb_Selected)
+  {
+    //this.internalSelectedComboValue = Cmb_Selected.key;
+    this.setState({SelectedAttendance:Cmb_Selected.key });
   }
 
   public comboSLItemChange(evt,Cmb_Selected)
@@ -1290,12 +1316,27 @@ public async UpdateItemWS()
           innerItemcomboValue = "Other";
           textboxDisabled = false;
         }
-    
+        
+        let attendanceNumber = 1;
+        if(response1.QUANTITY == null)
+        {
+          
+        }
+        else if (response1.QUANTITY == 0)
+        {
+          attendanceNumber = 1;
+        }
+        else
+        {
+          attendanceNumber = response1.QUANTITY;
+        }
+
 
         this.setState({itemId:itemId, item: response, 
           JAN_TOT:response1.JAN_TOT,FEB_TOT:response1.FEB_TOT,MAR_TOT:response1.MAR_TOT,APR_TOT:response1.APR_TOT,MAY_TOT:response1.MAY_TOT,JUN_TOT:response1.JUN_TOT,JUL_TOT:response1.JUL_TOT,AUG_TOT:response1.AUG_TOT,SEP_TOT:response1.SEP_TOT,OCT_TOT:response1.OCT_TOT,NOV_TOT:response1.NOV_TOT,DEC_TOT:response1.DEC_TOT,
           APP_JAN_TOT:response1.APP_JAN_TOT,APP_FEB_TOT:response1.APP_FEB_TOT,APP_MAR_TOT:response1.APP_MAR_TOT,APP_APR_TOT:response1.APP_APR_TOT,APP_MAY_TOT:response1.APP_MAY_TOT,APP_JUN_TOT:response1.APP_JUN_TOT,APP_JUL_TOT:response1.APP_JUL_TOT,APP_AUG_TOT:response1.APP_AUG_TOT,APP_SEP_TOT:response1.APP_SEP_TOT,APP_OCT_TOT:response1.APP_OCT_TOT,APP_NOV_TOT:response1.APP_NOV_TOT,APP_DEC_TOT:response1.APP_DEC_TOT,
-          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:innerItemDesc,PRIORITY:response1.PRIORITY, SelectedSL: innerItemcomboValue, otherTextBoxDisable:textboxDisabled
+          COMMENTS:response1.COMMENTS, APPROVED:response1.APPROVED, REASON:response1.REASON,ITEM_DESC:innerItemDesc,PRIORITY:response1.PRIORITY, SelectedSL: innerItemcomboValue, otherTextBoxDisable:textboxDisabled,
+          SelectedAttendance:attendanceNumber.toString()
 
         });
         
@@ -1760,6 +1801,116 @@ public async UpdateItemWS()
         this.setState({ APP_DEC_TOT: parseInt(evt.target.value.substr(0, 100)) });
       }
       //alert(evt.target.value.substr(0, 100)); 
+    }
+
+    public getAttendanceOptions(): IComboBoxOptionLoan[]
+    {
+      
+            let ComOptions:IComboBoxOptionLoan[] = [];
+            let comOption = new IComboBoxOptionLoan();
+      comOption = new IComboBoxOptionLoan();comOption.key ="1"; comOption.text = "1";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="2"; comOption.text = "2";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="3"; comOption.text = "3";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="4"; comOption.text = "4";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="5"; comOption.text = "5";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="6"; comOption.text = "6";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="7"; comOption.text = "7";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="8"; comOption.text = "8";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="9"; comOption.text = "9";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="10"; comOption.text = "10";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="11"; comOption.text = "11";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="12"; comOption.text = "12";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="13"; comOption.text = "13";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="14"; comOption.text = "14";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="15"; comOption.text = "15";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="16"; comOption.text = "16";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="17"; comOption.text = "17";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="18"; comOption.text = "18";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="19"; comOption.text = "19";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="20"; comOption.text = "20";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="21"; comOption.text = "21";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="22"; comOption.text = "22";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="23"; comOption.text = "23";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="24"; comOption.text = "24";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="25"; comOption.text = "25";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="26"; comOption.text = "26";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="27"; comOption.text = "27";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="28"; comOption.text = "28";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="29"; comOption.text = "29";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="30"; comOption.text = "30";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="31"; comOption.text = "31";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="32"; comOption.text = "32";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="33"; comOption.text = "33";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="34"; comOption.text = "34";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="35"; comOption.text = "35";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="36"; comOption.text = "36";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="37"; comOption.text = "37";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="38"; comOption.text = "38";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="39"; comOption.text = "39";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="40"; comOption.text = "40";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="41"; comOption.text = "41";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="42"; comOption.text = "42";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="43"; comOption.text = "43";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="44"; comOption.text = "44";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="45"; comOption.text = "45";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="46"; comOption.text = "46";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="47"; comOption.text = "47";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="48"; comOption.text = "48";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="49"; comOption.text = "49";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="50"; comOption.text = "50";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="51"; comOption.text = "51";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="52"; comOption.text = "52";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="53"; comOption.text = "53";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="54"; comOption.text = "54";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="55"; comOption.text = "55";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="56"; comOption.text = "56";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="57"; comOption.text = "57";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="58"; comOption.text = "58";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="59"; comOption.text = "59";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="60"; comOption.text = "60";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="61"; comOption.text = "61";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="62"; comOption.text = "62";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="63"; comOption.text = "63";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="64"; comOption.text = "64";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="65"; comOption.text = "65";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="66"; comOption.text = "66";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="67"; comOption.text = "67";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="68"; comOption.text = "68";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="69"; comOption.text = "69";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="70"; comOption.text = "70";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="71"; comOption.text = "71";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="72"; comOption.text = "72";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="73"; comOption.text = "73";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="74"; comOption.text = "74";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="75"; comOption.text = "75";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="76"; comOption.text = "76";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="77"; comOption.text = "77";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="78"; comOption.text = "78";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="79"; comOption.text = "79";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="80"; comOption.text = "80";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="81"; comOption.text = "81";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="82"; comOption.text = "82";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="83"; comOption.text = "83";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="84"; comOption.text = "84";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="85"; comOption.text = "85";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="86"; comOption.text = "86";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="87"; comOption.text = "87";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="88"; comOption.text = "88";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="89"; comOption.text = "89";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="90"; comOption.text = "90";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="91"; comOption.text = "91";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="92"; comOption.text = "92";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="93"; comOption.text = "93";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="94"; comOption.text = "94";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="95"; comOption.text = "95";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="96"; comOption.text = "96";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="97"; comOption.text = "97";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="98"; comOption.text = "98";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="99"; comOption.text = "99";  ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();comOption.key ="100"; comOption.text = "100";  ComOptions = ComOptions.concat(comOption);
+      
+      
+      return ComOptions;
     }
 
 

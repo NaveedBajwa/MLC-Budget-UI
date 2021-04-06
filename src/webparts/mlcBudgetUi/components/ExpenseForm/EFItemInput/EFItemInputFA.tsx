@@ -1038,6 +1038,12 @@ public async DeleteItemWS()
       return 1;
     }
 
+    if(this.state.SelectedFA == '')
+    {
+      this.setState({ hideDialog: false, dialogBoxMsg: "Please select an Item"});
+      return 1;
+    }
+
     let response1 : any = this.UpdateItemWS().then(
       response => {
         response1 = response;

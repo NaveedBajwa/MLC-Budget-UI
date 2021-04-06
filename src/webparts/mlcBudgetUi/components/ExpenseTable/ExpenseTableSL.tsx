@@ -88,34 +88,64 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
   }
 
   public renderTableData() {
-    
+    if(this.state.items ==null || this.state.items.length == 0)
+    {
+      return(
+        <tr   >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td >
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                          <td style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }} >
+                           <b>&nbsp;</b>
+                          </td>
+                        </tr>
+      );
+    }
     return this.state.items.map((item, index) => {
         return (
-        <tr onClick={this.OnRowClick.bind(this)} style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >
-        <td key={index} data-item={item.itemID}  style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+        <tr  style={{cursor:"pointer"}} onPointerLeave={this.resetColor.bind(this)} onPointerEnter={this.changeColor.bind(this)} >
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}   style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
           {item.item}
         </td>
-        <td key={index} data-item={item.itemID}  style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}   style={{ border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
           {item.atendance}
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.term1).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.term2).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.term3).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
           
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.term4).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
           
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.total).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
         </td>
-        <td key={index} data-item={item.account} style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
+        <td key={index} title={item.itemID} data-item={item.itemID} onClick={this.OnRowClick.bind(this)}  style={{border:"1px", borderColor:"black",borderCollapse:"collapse" , borderStyle:"solid" }} align="right">
         <NumberFormat value={Number(item.approvedTotal).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
           
         </td>
@@ -297,8 +327,11 @@ public resetColor(e){
 
 public OnRowClick(e)
 { 
-  const accountCode = e.target.getAttribute('data-item');
-  this.props.OnChangeExpenseInputView(true,accountCode);
+  //const accountCode = e.target.getAttribute('data-item');
+  //this.props.OnChangeExpenseInputView(true,accountCode);
+  const accountCode = e.currentTarget.title;
+  const itemCode = e.currentTarget.title;
+  this.props.OnChangeExpenseInputView(true,'',itemCode);
 
 }
 

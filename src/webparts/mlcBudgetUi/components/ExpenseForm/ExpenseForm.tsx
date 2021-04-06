@@ -71,6 +71,7 @@ export interface IExpenseFormState {
   budgetYearText:string;
   itemCategoryId:string;
   refresh:number;
+  technologyCategory:string;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -84,7 +85,7 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
   
   constructor(props: IExpenseFormProps) {
     super(props);
-    this.state = {refresh:0, budgetCategoryId:this.props.budgetCategoryId, budgetCategoryText:this.props.budgetCategoryText, costCenterText:this.props.costCenterText, costCenterId:this.props.costCenterId,
+    this.state = {technologyCategory:"0",refresh:0, budgetCategoryId:this.props.budgetCategoryId, budgetCategoryText:this.props.budgetCategoryText, costCenterText:this.props.costCenterText, costCenterId:this.props.costCenterId,
                     budgetYearId:this.props.costCenterId,budgetYearText:this.props.budgetYearText, itemCategoryId:this.props.itemCategoryId};
   }
 
@@ -146,6 +147,8 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
     {
       this.props.OnChangeExpenseInputView(false);
     }
+
+    
   
 
 }
