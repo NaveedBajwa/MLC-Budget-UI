@@ -148,7 +148,7 @@ export class IComboBoxOptionLoan implements IComboBoxOption
 
 
 export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemInputFAState> {
-
+  private _topElement: HTMLElement; 
   private _dragOptions = {
     moveMenuItemText: 'Move',
     closeMenuItemText: 'Close',
@@ -385,6 +385,8 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
 
     return(
       <div>
+                <span className="ms-font-xl ms-fontColor-white" 
+                 ref={(topElement) => this._topElement = topElement!}>&nbsp;</span><br />
         <table style={{width:"100%"}}>
           <tr>
             <td style={{backgroundColor:"#89c4f4",color:"white",padding:"10px" }} align="center" >
@@ -966,6 +968,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
           APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
           COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedFA:""});
           this.props.OnChangeItemId('0');
+          this._topElement.scrollIntoView();
   }
 
 
@@ -985,6 +988,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
 
           this.props.refreshThis(this.state.ItemsAdded);
           this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully removed from the system"});
+          this._topElement.scrollIntoView();
           //this.setItemsStudentTotal();
         }
       }
@@ -1056,7 +1060,7 @@ public async DeleteItemWS()
           this.setState({ ItemsAdded:(this.state.ItemsAdded +1)});
           this.NewItem();
           //window.scroll(0,0);
-          window.scrollTo(0,0);
+          this._topElement.scrollIntoView();
           //$("div[data-automation-id='CanvasZone']")
           //$(#s4-workspace).scroll(0,0);
         }

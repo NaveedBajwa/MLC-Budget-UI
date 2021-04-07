@@ -196,13 +196,13 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
  public render(): JSX.Element {
     if(this.props.costCenterId != this.state.costCenterId && this.props.costCenterId != "abc")
     {
-      this.setState({costCenterId:this.props.costCenterId, hideDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically."});
+      this.setState({costCenterId:this.props.costCenterId, hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically."});
       this.setItems();
       this.setItemsTotal();
     }
     if(this.props.budgetYearText != this.state.BudgetYearText && this.props.costCenterId != "abc")
     {
-      this.setState({budgetYearId:this.props.budgetYearId, BudgetYearText:this.props.budgetYearText, hideDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
+      this.setState({budgetYearId:this.props.budgetYearId, BudgetYearText:this.props.budgetYearText, hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
       this.setItems();
       this.setItemsTotal();
     }
@@ -257,21 +257,21 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
                                </DialogFooter>
                                </Dialog>
                                <Dialog hidden={this.state.hideMsgDialog} onDismiss={this._closeDialog} 
-                                        dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                                       modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
-                                       dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
-                               </Dialog>
+                              dialogContentProps={{type: DialogType.normal,title: 'Loading Data', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                             dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+                     </Dialog>
                                </div>
               
       );
   }
 
   private _showDialog = (): void => {
-    this.setState({ hideDialog: false });
+    this.setState({ hideDialog: false,hideMsgDialog:true });
   }
 
   private _closeDialog = (): void => {
-    this.setState({ hideDialog: true });
+    this.setState({ hideDialog: true,hideMsgDialog:true });
   }
 
   public setItems()
@@ -279,7 +279,7 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
     let response1 : any = this.SetItemsWS().then(
       response => {
         response1 = response;
-        this.setState({items: response, hideDialog: true});
+        this.setState({items: response, hideDialog: true,hideMsgDialog:true});
       }
     );
   }
