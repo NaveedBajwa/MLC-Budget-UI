@@ -30,6 +30,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { Constants } from '../../Constants';
 import { AadHttpClient , IHttpClientOptions} from '@microsoft/sp-http';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 export interface IEFItemInputOEProps {
@@ -453,8 +454,10 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
                     <b>Quarterly</b>
                   </td>
                   <td>&nbsp;</td>
-                  <td align="right" style={{cursor:"pointer", width:"17%"}} title="Click to Fill-down Amounts"  onClick={this.copyApproved.bind(this)}>
-                        <b>Approved</b>    
+                  <td align="right" style={{cursor:"pointer", width:"17%"}}  onClick={this.copyApproved.bind(this)}>
+                      <Tooltip title={<h3>Click to Fill-down Amounts</h3>} placement="top" arrow>
+                        <b>Approved</b>
+                        </Tooltip>       
                   </td>
                   <td align="right" style={{width:"17%"}}>
                     <b>Quarterly</b>

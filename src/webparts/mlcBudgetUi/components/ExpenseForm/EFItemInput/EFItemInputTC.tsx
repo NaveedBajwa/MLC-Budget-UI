@@ -1004,7 +1004,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
         this.setState({TotalValueEqual:false});
       }
       return (
-        <b>The total requested amount does not match the Total Item value</b>
+        <b>Your monthly total does not equal the item's unit price multiplied by your requested quantity.</b>
       );
 
     }
