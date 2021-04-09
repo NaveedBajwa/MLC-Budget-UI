@@ -200,7 +200,8 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
         //this.innerItemCategoryChange(Cmb_Selected.key);
         
         this.setItems(Cmb_Selected.key);
-        this.props.OnChangeItemId('0');
+        this.props.OnChangeitemCategoryId(Cmb_Selected.key);
+        //this.props.OnChangeItemId('0');
     }
 
   public getItemCategoryOptions(): IComboBoxOptionLoan[]

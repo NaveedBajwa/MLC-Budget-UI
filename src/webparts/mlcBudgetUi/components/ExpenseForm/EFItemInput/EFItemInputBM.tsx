@@ -979,12 +979,12 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
 
   public DeleteItem()
   {
-    if(this.state.ITEM_DESC.length==0)
+/*    if(this.state.ITEM_DESC.length==0)
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
-
+*/
     let response1 : any = this.DeleteItemWS().then(
       response => {
         response1 = response;

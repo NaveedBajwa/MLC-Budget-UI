@@ -83,6 +83,7 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
   };
 
   public componentDidMount() {
+    this.setState({hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
     this.setItems();
     this.setItemsTotal();
   }

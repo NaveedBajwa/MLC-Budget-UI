@@ -89,6 +89,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   };
 
   public componentDidMount() {
+    this.setState({hideMsgDialog: false, dialogBoxMsg: "Please wait while the data is being loaded. This message will close automatically." });
     this.setItems();
     this.setItemsTotal();
     this.setItemsStudentTotal();

@@ -181,6 +181,10 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
       this.getItem(this.props.itemId);
 
     }
+    if(this.state.AccountNumberId != this.props.AccountNumberId)
+    {
+      this.setState({AccountNumberId: this.props.AccountNumberId});
+    }
     if(this.state.item == null)
     {
       return (<table>
@@ -918,11 +922,13 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
 
   public DeleteItem()
   {
+    /*
     if(this.state.ITEM_DESC.length==0)
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
+    */
 
     let response1 : any = this.DeleteItemWS().then(
       response => {

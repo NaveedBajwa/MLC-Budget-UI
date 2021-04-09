@@ -551,7 +551,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                     <b>Quarterly</b>
                   </td>
                   <td>&nbsp;</td>
-                  <td align="right" style={{width:"17%"}} onClick={this.copyApproved.bind(this)}>
+                  <td align="right"  style={{cursor:"pointer", width:"17%"}} onClick={this.copyApproved.bind(this)}>
                         <Tooltip title={<h3>Click to Fill-down Amounts</h3>} placement="top" arrow>
                         <b>Approved</b>    
                         </Tooltip>
@@ -1217,11 +1217,13 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
 
   public DeleteItem()
   {
+    /*
     if(this.state.ITEM_DESC.length==0)
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
+    */
 
     let response1 : any = this.DeleteItemWS().then(
       response => {

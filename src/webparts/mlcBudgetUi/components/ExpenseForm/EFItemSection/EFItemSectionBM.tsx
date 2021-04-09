@@ -81,6 +81,7 @@ export class EFItemSectionBM extends React.Component<IEFItemSectionBMProps, IEFI
   public requestTotal:number;
   public approvedTotal:number;
 
+
   constructor(props: IEFItemSectionBMProps) {
     super(props);
 
@@ -114,6 +115,7 @@ export class EFItemSectionBM extends React.Component<IEFItemSectionBMProps, IEFI
     {
       return (
         <table style={{width:"100%"}} >
+
           <tr style={{width:"100%"}}>
           <td style={{width:"100%"}}>
               <table style={{width:"100%"}}>

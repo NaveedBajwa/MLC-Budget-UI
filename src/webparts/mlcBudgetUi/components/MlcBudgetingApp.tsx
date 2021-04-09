@@ -45,6 +45,7 @@ export interface IMlcBudgetingAppState {
   CostCenterOptions:IComboBoxOptionLoan[];
   BudgetYearOptions:IComboBoxOptionLoan[];
   itemId:string;
+  IsBudgetEnabled:boolean;
 
 }
 
@@ -59,17 +60,20 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let BudgetCategoryOption:IComboBoxOptionLoan[] = [];
     let CostCenterOption:IComboBoxOptionLoan[] = [];
     let BudgetYearOption:IComboBoxOptionLoan[] = [];
-    this.state = {itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
+    this.state = {IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
                     budgetYearText:"2021", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
                     CostCenterOptions:CostCenterOption, BudgetYearOptions:BudgetYearOption};
  }
 
  public componentDidMount()
  {
+  this.IsBudget();
   this.getFirstBudgetCategory();
   this.getFirstCostCenter();
   this.getBudgetCategoryOptions();
+
   this.getCostCenterOptions();
+
   //let CostCenterOption:IComboBoxOptionLoan[] = this.getCostCenterOptions();
   let BudgetYearOption:IComboBoxOptionLoan[] = this.getBudgetYearOptions();
   this.setState({BudgetYearOptions:BudgetYearOption}); 
@@ -190,6 +194,20 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
 
 
   public render(): React.ReactElement<IMlcBudgetingAppProps> {
+    if(this.state.IsBudgetEnabled == false)
+    {
+      return(
+      <div>
+        <table style={{width:"100%"}}>
+          <tr style={{width:"100%"}}>
+            <td style={{color:"red" ,width:"100%" }} align="center">
+              <b>The Budget is closed, please contact System Administrator </b>
+            </td>
+          </tr>
+        </table>
+      </div>);
+    }
+    
     if(this.state.expenseInputView==false)
     {
       return (
@@ -265,7 +283,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
 
   public OnChangeitemCategoryId(seletedItemCategoryId:string)
   {
-    this.setState({itemCategoryId:seletedItemCategoryId});
+    this.setState({itemCategoryId:seletedItemCategoryId,itemId:'0'});
   }
 
   public getBudgetCategoryOptions(): IComboBoxOptionLoan[]
@@ -343,6 +361,36 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
 
   public async GetCostCentreWS(): Promise<any[]> {
     let WSS = Constants.apiURL + '/GetDistinctCostCentre';
+    try{
+    return await this.props.budgetAppClient
+    .get(WSS , AadHttpClient.configurations.v1)
+    .then((response: HttpClientResponse) => {
+      return response.json();
+    })
+    .then(jsonResponse => {
+      return jsonResponse;
+    }) as Promise<any>;
+    } catch (e )
+      {
+        console.error(e);
+        let i=0;
+        //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+      }
+    }
+
+    public IsBudget()
+  {
+    
+    let response1 : any = this.GetCostCentreWS().then(
+      response => {
+        response1 = response;
+          this.setState({IsBudgetEnabled:response1});
+      }
+    );
+  }
+
+  public async IsBudgetWS(): Promise<any[]> {
+    let WSS = Constants.apiURL + '/IsBudgetOn';
     try{
     return await this.props.budgetAppClient
     .get(WSS , AadHttpClient.configurations.v1)

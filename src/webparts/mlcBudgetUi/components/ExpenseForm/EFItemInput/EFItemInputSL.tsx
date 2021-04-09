@@ -992,11 +992,13 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
 
   public DeleteItem()
   {
+    /*
     if(this.state.ITEM_DESC.length==0)
     {
       this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
+    */
 
     let response1 : any = this.DeleteItemWS().then(
       response => {

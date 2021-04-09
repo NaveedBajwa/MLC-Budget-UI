@@ -79,6 +79,8 @@ export class IComboBoxOptionLoan implements IComboBoxOption
 
 export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemSectionState> {
   
+  
+
   constructor(props: IEFItemSectionProps) {
     super(props);
 
@@ -100,6 +102,7 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
     {
       return (
         <table style={{width:"100%"}}>
+          
         <tr style={{width:"100%"}}>
         <td colSpan={2} style={{width:"100%"}}>
           <EFItemSectionOE ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}
@@ -152,6 +155,7 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
     {
       return (
       <table style={{width:"100%"}}>
+        
       <tr>
         <td colSpan={2}>
         <EFItemSectionTC ItemId={this.props.itemId} refresh={this.props.refresh} OnChangeItemId={this.props.OnChangeItemId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context}  budgetCategoryText={this.props.budgetCategoryText} budgetCategoryId={this.props.budgetCategoryId} costCenterText={this.props.costCenterText}

@@ -82,7 +82,7 @@ export class IComboBoxOptionLoan implements IComboBoxOption
 
 
 export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseFormState> {
-  
+  private _topElement: HTMLElement;
   constructor(props: IExpenseFormProps) {
     super(props);
     this.state = {technologyCategory:"0",refresh:0, budgetCategoryId:this.props.budgetCategoryId, budgetCategoryText:this.props.budgetCategoryText, costCenterText:this.props.costCenterText, costCenterId:this.props.costCenterId,
@@ -95,6 +95,8 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
             <tr style={{width:"100%",verticalAlign:"top"}}>
               <td colSpan={2}>
                 <EFHeader YearText={this.props.budgetYearText} CostCenterText={this.props.costCenterText} />
+                <span className="ms-font-xl ms-fontColor-white"
+                 ref={(topElement) => this._topElement = topElement!}>&nbsp;</span><br/>
             </td>
           </tr>
           <tr style={{width:"100%",verticalAlign:"top"}}>
@@ -141,11 +143,13 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
     {
       this.props.OnChangeItemId('0');
       this.setState({refresh:ItemsAdded});
+      this._topElement.scrollIntoView();
     }
 
     public OnNewItemClick()
     {
       this.props.OnChangeExpenseInputView(false);
+
     }
 
     
