@@ -222,8 +222,8 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
     }
 
     //*********************
-    requestFieldsDisabled = false;
-    ApprovedFieldDisabled = false;
+    //requestFieldsDisabled = false;
+    //ApprovedFieldDisabled = false;
     
     /******/
 

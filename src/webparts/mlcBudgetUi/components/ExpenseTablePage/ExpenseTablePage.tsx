@@ -31,6 +31,7 @@ import { RightButtonSection } from '../RightButtonSection/RightButtonSection';
 import { ExpenseTableMain } from '../ExpenseTable/ExpenseTableMain';
 import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { Constants } from '../Constants';
 
 
 
@@ -62,6 +63,8 @@ export interface IExpenseTablePageState {
   budgetYearId:string;
   budgetYearText:string;
   itemCategoryId:string;
+  NonBoldAlert:string;
+  BoldAlert:string;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -75,8 +78,14 @@ export class ExpenseTablePage extends React.Component<IExpenseTablePageProps, IE
   
   constructor(props: IExpenseTablePageProps) {
     super(props);
-    this.state = {  budgetCategoryText:this.props.budgetCategoryText, budgetCategoryId:this.props.budgetCategoryId, costCenterText:this.props.costCenterText,
+    this.state = { NonBoldAlert:"", BoldAlert:"",  budgetCategoryText:this.props.budgetCategoryText, budgetCategoryId:this.props.budgetCategoryId, costCenterText:this.props.costCenterText,
                       costCenterId:this.props.costCenterId, budgetYearId:this.props.budgetYearId, budgetYearText:this.props.budgetYearText,itemCategoryId:"" };
+  }
+
+  public componentDidMount()
+  {
+    this.getBoldAlert();
+    this.getNonBoldAlert();
   }
 
   public render(): JSX.Element {
@@ -84,8 +93,8 @@ export class ExpenseTablePage extends React.Component<IExpenseTablePageProps, IE
           <table style={{width:"100%"}}>
           <tr>
           <td colSpan={2}>
-          <TopAlert alertText="Salary budget and photocopying/printing figures are pre-populated." 
-            boldText="Do not enter any salaries and photocopying/printing values in this system." />
+          <TopAlert alertText={this.state.NonBoldAlert} 
+            boldText={this.state.BoldAlert} />
             </td>
           </tr>
           <tr>
@@ -118,6 +127,78 @@ export class ExpenseTablePage extends React.Component<IExpenseTablePageProps, IE
 
     }
 
+    public getBoldAlert(): string
+        {
+  
+          let i="0";
+          
+          let response1 : any = this.getBoldAlertWS().then(
+            response => {
+              response1 = response;
+              i = response.toString();
+              this.setState({ BoldAlert:i});
+              }); 
+              //this.setState({Notes:i});
+          return i;
+        }
+      
+      
+        public async getBoldAlertWS(): Promise<any[]> {
+          let WSS ="";
+          WSS = Constants.apiURL + '/GetBoldAlert';
+          try{
+          return await this.props.budgetAppClient
+          .get(WSS , AadHttpClient.configurations.v1)
+          .then((response: HttpClientResponse) => {
+            return response.json();
+          })
+          .then(jsonResponse => {
+            return jsonResponse;
+          }) as Promise<any>;
+          } catch (e )
+            {
+              console.error(e);
+              let i=0;
+              //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+            }
+          }
+
+
+          public getNonBoldAlert(): string
+          {
+    
+            let i="0";
+            
+            let response1 : any = this.getNonBoldAlertWS().then(
+              response => {
+                response1 = response;
+                i = response.toString();
+                this.setState({ NonBoldAlert:i});
+                }); 
+                //this.setState({Notes:i});
+            return i;
+          }
+        
+        
+          public async getNonBoldAlertWS(): Promise<any[]> {
+            let WSS ="";
+            WSS = Constants.apiURL + '/GetNonBoldAlert';
+            try{
+            return await this.props.budgetAppClient
+            .get(WSS , AadHttpClient.configurations.v1)
+            .then((response: HttpClientResponse) => {
+              return response.json();
+            })
+            .then(jsonResponse => {
+              return jsonResponse;
+            }) as Promise<any>;
+            } catch (e )
+              {
+                console.error(e);
+                let i=0;
+                //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+              }
+            }
     /*
     public OnBudgetCategoryChange(selectedCategoryId:string,selectedBudgetcategoryText:string)
     {

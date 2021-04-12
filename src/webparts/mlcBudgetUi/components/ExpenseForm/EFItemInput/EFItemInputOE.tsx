@@ -222,8 +222,8 @@ export class EFItemInputOE extends React.Component<IEFItemInputOEProps, IEFItemI
     }
 
     //*********************
-    requestFieldsDisabled = false;
-    ApprovedFieldDisabled = false;
+    //requestFieldsDisabled = false;
+    //ApprovedFieldDisabled = false;
     
     /******/
 

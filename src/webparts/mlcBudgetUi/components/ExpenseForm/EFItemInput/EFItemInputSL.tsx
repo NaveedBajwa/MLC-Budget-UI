@@ -227,8 +227,8 @@ export class EFItemInputSL extends React.Component<IEFItemInputSLProps, IEFItemI
     }
 
     //*********************
-    requestFieldsDisabled = false;
-    ApprovedFieldDisabled = false;
+    //requestFieldsDisabled = false;
+    //ApprovedFieldDisabled = false;
     
     /******/
 

@@ -46,7 +46,7 @@ export interface IMlcBudgetingAppState {
   BudgetYearOptions:IComboBoxOptionLoan[];
   itemId:string;
   IsBudgetEnabled:boolean;
-
+  IsCostCenterAssigned:boolean;
 }
 
 export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppProps, IMlcBudgetingAppState> {
@@ -60,7 +60,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let BudgetCategoryOption:IComboBoxOptionLoan[] = [];
     let CostCenterOption:IComboBoxOptionLoan[] = [];
     let BudgetYearOption:IComboBoxOptionLoan[] = [];
-    this.state = {IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
+    this.state = {IsCostCenterAssigned:true, IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
                     budgetYearText:"2021", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
                     CostCenterOptions:CostCenterOption, BudgetYearOptions:BudgetYearOption};
  }
@@ -194,6 +194,22 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
 
 
   public render(): React.ReactElement<IMlcBudgetingAppProps> {
+    
+    
+    if(this.state.IsCostCenterAssigned == false)
+    {
+      return(
+      <div>
+        <table style={{width:"100%"}}>
+          <tr style={{width:"100%"}}>
+            <td style={{color:"red" ,width:"100%" }} align="center">
+              <b>No cost center is assigned to you, please contact System Administrator </b>
+            </td>
+          </tr>
+        </table>
+      </div>);
+    }
+
     if(this.state.IsBudgetEnabled == false)
     {
       return(
@@ -342,6 +358,11 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let response1 : any = this.GetCostCentreWS().then(
       response => {
         response1 = response;
+        if(response.length == 0)
+        {
+          this.setState({IsCostCenterAssigned:false});
+          return ComOptions;
+        }
         response.map(itemY=>{
           let comOption = new IComboBoxOptionLoan();
           if(i=="0")
@@ -352,7 +373,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
           comOption.text = itemY.desc_text;
           ComOptions = ComOptions.concat(comOption);
         }); 
-        this.setState({costCenterId:i, CostCenterOptions: ComOptions});
+        this.setState({costCenterId:i, CostCenterOptions: ComOptions,IsCostCenterAssigned:true});
         
       }
     );
@@ -381,7 +402,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     public IsBudget()
   {
     
-    let response1 : any = this.GetCostCentreWS().then(
+    let response1 : any = this.IsBudgetWS().then(
       response => {
         response1 = response;
           this.setState({IsBudgetEnabled:response1});

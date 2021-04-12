@@ -240,8 +240,8 @@ export class EFItemInputTC extends React.Component<IEFItemInputTCProps, IEFItemI
     }
 
     //*********************
-    requestFieldsDisabled = false;
-    ApprovedFieldDisabled = false;
+    //requestFieldsDisabled = false;
+    //ApprovedFieldDisabled = false;
     
     /******/
 
@@ -498,7 +498,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                     autoComplete={true ? 'on' : 'off'}
                     options={this.state.AppQuantityOptions}
                     selectedKey= {this.state.SelectedAppQuantity}
-                    disabled={requestFieldsDisabled}
+                    disabled={ApprovedFieldDisabled} 
                     onChange ={this.comboAppQuantity.bind(this)}
                     />
                     
@@ -510,25 +510,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
           </tr>
           <tr>
             <td>
-              <table style={{width:"100%"}}>
-                <tr style={{width:"100%"}}>
-                  <td style={{width:"50%"}}>
-                    <b>Unit Price ($):</b>
-                  </td>
-                  <td  style={{width:"50%", color:"red"}}>
-                    <b>Total Item Value ($):</b>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <TextField value={this.state.ItemPrice.toString()} onChange={this.ChangeItemPrice.bind(this)} disabled={requestFieldsDisabled} />
-                  </td>
-                  <td>
-                    <TextField value={(this.state.ItemPrice * parseInt(this.state.SelectedQuantity)).toString()} disabled={true} />
-                  </td>
-                  
-                </tr>
-              </table>
+              {this.ShowUnitPrice(requestFieldsDisabled)}
             </td>
           </tr>
           <tr>
@@ -968,7 +950,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                     <DefaultButton text="Cancel" onClick={this.NewItem.bind(this)} />
                   </td>
                   <td style={{width:"33%"}} align="right">
-                    <DefaultButton disabled={requestFieldsDisabled || !(this.state.TotalValueEqual)}  text={buttonText} onClick={this.UpdateItem.bind(this)} />
+                    <DefaultButton disabled={(requestFieldsDisabled || !(this.state.TotalValueEqual)) }  text={buttonText} onClick={this.UpdateItem.bind(this)} />
                   </td>
                 </tr>
               </table>
@@ -995,9 +977,37 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
     );
   }
 
+  public ShowUnitPrice(requestFieldsDisabled)
+  {
+    if(this.state.ItemPrice != 0)
+    {
+      return(
+        <table style={{width:"100%"}}>
+        <tr style={{width:"100%"}}>
+          <td style={{width:"50%"}}>
+            <b>{}   Unit Price ($):</b>
+          </td>
+          <td  style={{width:"50%", color:"red"}}>
+            <b>Total Item Value ($):</b>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <TextField value={this.state.ItemPrice.toString()} onChange={this.ChangeItemPrice.bind(this)} disabled={true} />
+          </td>
+          <td>
+            <TextField value={(this.state.ItemPrice * parseInt(this.state.SelectedQuantity)).toString()} disabled={true} />
+          </td>
+          
+        </tr>
+      </table>
+      );
+    }
+  }
+
   public TotalAlertMessage(total_Tot)
   {
-    if((parseInt(this.state.SelectedQuantity) * this.state.ItemPrice) != total_Tot)
+    if(((parseInt(this.state.SelectedQuantity) * this.state.ItemPrice) != total_Tot) && this.state.ItemPrice !=0)
     {
       if(this.state.TotalValueEqual == true)
       {
@@ -1207,7 +1217,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
   public NewItem()
   {
     this.setState({
-          JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
+          JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,PRIORITY:"1",
           APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
           COMMENTS:"", APPROVED:"0", REASON:"",ITEM_DESC:"",SelectedItem:'0',SelectedQuantity:'1',SelectedAppQuantity:'1', ItemPrice:0});
           this.props.OnChangeItemId('0');
@@ -1233,6 +1243,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
 
           this.props.refreshThis(this.state.ItemsAdded);
           this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully removed from the system"});
+          this.NewItem();
           this._topElement.scrollIntoView();
           //this.setItemsStudentTotal();
         }
@@ -1547,7 +1558,10 @@ public async UpdateItemWS()
         }
         if(itemId!='0')
         {
+          if(this.state.IsNetworkCatOther == false)
+          {
             this.getEquipbyEqipNameAndPrice(this.state.AccountNumberId,response1.ITEM_DESC);
+          }
         }    
       }
     );

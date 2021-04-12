@@ -303,7 +303,7 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
   
           let i="0";
           
-          let response1 : any = this.GetNotesWS().then(
+          let response1 : any = this.getUserDocURLWS().then(
             response => {
               response1 = response;
               i = response.toString();

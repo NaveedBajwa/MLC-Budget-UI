@@ -94,7 +94,7 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
           <table style={{width:"100%",verticalAlign:"top"}} >
             <tr style={{width:"100%",verticalAlign:"top"}}>
               <td colSpan={2}>
-                <EFHeader YearText={this.props.budgetYearText} CostCenterText={this.props.costCenterText} />
+                <EFHeader YearText={this.props.budgetYearText} CostCenterText={this.props.costCenterText}  budgetAppClient={this.props.budgetAppClient} context={this.props.context}  />
                 <span className="ms-font-xl ms-fontColor-white"
                  ref={(topElement) => this._topElement = topElement!}>&nbsp;</span><br/>
             </td>

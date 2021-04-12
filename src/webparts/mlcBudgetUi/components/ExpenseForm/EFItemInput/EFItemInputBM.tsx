@@ -224,8 +224,8 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
     }
 
     //*********************
-    requestFieldsDisabled = false;
-    ApprovedFieldDisabled = false;
+    //requestFieldsDisabled = false;
+    //ApprovedFieldDisabled = false;
     
     /******/
 
