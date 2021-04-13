@@ -143,6 +143,7 @@ export interface IEFItemInputTCState {
   SelectedAppQuantity:string;
   IsNetworkCatOther:boolean;
   TotalValueEqual:boolean;
+  dialogMsg:string;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -167,7 +168,7 @@ export class EFItemInputTC extends React.Component<IEFItemInputTCProps, IEFItemI
     let InnerItemsOptions:IComboBoxOptionLoan[] = this.getTCItemsCategoryOptions();
     let InnerQuantityOptions:IComboBoxOptionLoan[] = this.getQuantityOptions();
     let InnerAppQuantityOptions:IComboBoxOptionLoan[] = this.getQuantityOptions();
-    this.state = {TotalValueEqual:true, QuantityOptions:InnerQuantityOptions,SelectedQuantity:"1",AppQuantityOptions:InnerAppQuantityOptions, SelectedAppQuantity:"1",
+    this.state = {dialogMsg:"System Message", TotalValueEqual:true, QuantityOptions:InnerQuantityOptions,SelectedQuantity:"1",AppQuantityOptions:InnerAppQuantityOptions, SelectedAppQuantity:"1",
     ItemPrice:0,   ItemsOptions:InnerItemsOptions,SelectedItem:"",IsAdmin:false, AllowedBudgetYear:this.props.YearId,
     IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
@@ -932,7 +933,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                 </tr>
                 <tr>
                   <td>
-                  <TextField disabled={ApprovedFieldDisabled} multiline={true} label="" value={this.state.REASON} ></TextField>
+                  <TextField disabled={ApprovedFieldDisabled} multiline={true} label="" value={this.state.REASON} onChange={this.handleChangeREASON.bind(this)} ></TextField>
                   </td>
                 </tr>
               </table>
@@ -960,8 +961,8 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
          </table>
 
         <Dialog hidden={this.state.hideDialog} onDismiss={this._closeDialog} 
-                              dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
+                              dialogContentProps={{type: DialogType.normal,title: this.state.dialogMsg, closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
                      <DialogFooter>
                      <DefaultButton onClick={this._closeDialog} text="Close" />
@@ -969,7 +970,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                      </Dialog>
                      <Dialog hidden={this.state.hideMsgDialog} onDismiss={this._closeDialog} 
                               dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
         </Dialog>
       </div>
@@ -1242,7 +1243,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
         {
 
           this.props.refreshThis(this.state.ItemsAdded);
-          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully removed from the system"});
+          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogMsg:"Item Deleted", dialogBoxMsg: "The item has been successfully deleted from the budget system"});
           this.NewItem();
           this._topElement.scrollIntoView();
           //this.setItemsStudentTotal();
@@ -1293,7 +1294,7 @@ public async DeleteItemWS()
   {
     if(this.state.ITEM_DESC.length==0)
     {
-      this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
+      this.setState({ hideDialog: false,dialogMsg:"Missing Item Name", dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
 
@@ -1367,7 +1368,7 @@ public async UpdateItemWS()
       APPROVED: this.state.APPROVED,
       QUANTITY: this.state.SelectedQuantity,
       APP_QUANTITY:this.state.SelectedAppQuantity,
-      REASON: "",
+      REASON: this.state.REASON,
       ADDED_BY: "",
       ADDED_DATE: "2020-03-21T23:37:35.169Z",
       APPROVED_BY: "",
@@ -1410,7 +1411,7 @@ public async UpdateItemWS()
     {
       //alert("Please provide numeric value for Loan Amount")
       evt.target.value = this.state.ItemPrice;
-      this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+      this.setState({ hideDialog: false, dialogMsg:"Numeric Value Only", dialogBoxMsg: "The dollar amount entered MUST be a whole number ONLY.To enter a negative amount, please enter the number first, then add the minus sign to the front of the number."});
     }
     else
     {
@@ -1696,7 +1697,7 @@ public async UpdateItemWS()
       {
         //alert("Please provide numeric value for Loan Amount")
         evt.target.value = this.state.JAN_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+        this.setState({ hideDialog: false, dialogMsg:"Numeric Value Only", dialogBoxMsg: "The dollar amount entered MUST be a whole number ONLY. To enter a negative amount, please enter the number first, then add the minus sign to the front of the number."});
       }
       else
       {

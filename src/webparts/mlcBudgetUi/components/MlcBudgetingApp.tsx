@@ -47,6 +47,7 @@ export interface IMlcBudgetingAppState {
   itemId:string;
   IsBudgetEnabled:boolean;
   IsCostCenterAssigned:boolean;
+  BoldText:string;
 }
 
 export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppProps, IMlcBudgetingAppState> {
@@ -60,7 +61,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let BudgetCategoryOption:IComboBoxOptionLoan[] = [];
     let CostCenterOption:IComboBoxOptionLoan[] = [];
     let BudgetYearOption:IComboBoxOptionLoan[] = [];
-    this.state = {IsCostCenterAssigned:true, IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
+    this.state = {BoldText:"",IsCostCenterAssigned:true, IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
                     budgetYearText:"2021", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
                     CostCenterOptions:CostCenterOption, BudgetYearOptions:BudgetYearOption};
  }
@@ -68,6 +69,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
  public componentDidMount()
  {
   this.IsBudget();
+  this.getNonBoldAlert();
   this.getFirstBudgetCategory();
   this.getFirstCostCenter();
   this.getBudgetCategoryOptions();
@@ -200,13 +202,15 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     {
       return(
       <div>
-        <table style={{width:"100%"}}>
-          <tr style={{width:"100%"}}>
-            <td style={{color:"red" ,width:"100%" }} align="center">
-              <b>No cost center is assigned to you, please contact System Administrator </b>
-            </td>
-          </tr>
-        </table>
+        <table style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
+            <tr style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
+              <td style={{backgroundColor:"#f3565d",color:"white", width:"100%",padding:"10px" }}>
+                <b>
+                 The Finance System indicates that you do not have responsibility for any faculty budgets. As a result, There is no information to display. <br/>If you feel you should have access to these resources, please contact Louisa Johnstone on ext 6318.
+                </b>
+              </td>
+            </tr>
+          </table>
       </div>);
     }
 
@@ -214,13 +218,15 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     {
       return(
       <div>
-        <table style={{width:"100%"}}>
-          <tr style={{width:"100%"}}>
-            <td style={{color:"red" ,width:"100%" }} align="center">
-              <b>The Budget is closed, please contact System Administrator </b>
-            </td>
-          </tr>
-        </table>
+        <table style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
+            <tr style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
+              <td style={{backgroundColor:"#f3565d",color:"white", width:"100%",padding:"10px" }}>
+                <b>
+                {this.state.BoldText}
+                </b>
+              </td>
+            </tr>
+          </table>
       </div>);
     }
     
@@ -429,6 +435,42 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
       }
     }
 
+
+    public getNonBoldAlert(): string
+    {
+
+      let i="0";
+      
+      let response1 : any = this.getNonBoldAlertWS().then(
+        response => {
+          response1 = response;
+          i = response.toString();
+          this.setState({ BoldText:i});
+          }); 
+          //this.setState({Notes:i});
+      return i;
+    }
+  
+  
+    public async getNonBoldAlertWS(): Promise<any[]> {
+      let WSS ="";
+      WSS = Constants.apiURL + '/GetNonBoldAlert';
+      try{
+      return await this.props.budgetAppClient
+      .get(WSS , AadHttpClient.configurations.v1)
+      .then((response: HttpClientResponse) => {
+        return response.json();
+      })
+      .then(jsonResponse => {
+        return jsonResponse;
+      }) as Promise<any>;
+      } catch (e )
+        {
+          console.error(e);
+          let i=0;
+          //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+        }
+      }
 
 }
 

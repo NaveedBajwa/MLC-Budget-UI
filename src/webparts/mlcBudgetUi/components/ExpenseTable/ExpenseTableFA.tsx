@@ -204,7 +204,11 @@ export class ExpenseTableFA extends React.Component<IExpenseTableFAProps, IExpen
     return (
       <div>
               <table style={{width:"100%", borderStyle:"solid", border:"1px", borderColor:"black",borderCollapse:"collapse" }} >
-
+                <tr >
+                  <td colSpan={7} align="right"> 
+                    <DefaultButton style={{backgroundColor:"#D3D3D3"}} text="Add Dept Fixed Asset Item" onClick={this.OnAddNewClick.bind(this)} />
+                  </td>
+                </tr>
                 <tr  style={{border:1, backgroundColor:"#D3D3D3",paddingTop:3}} >
                   <td style={{width:"40%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid"  }}>
                     <b>ITEM</b>
@@ -256,6 +260,12 @@ export class ExpenseTableFA extends React.Component<IExpenseTableFAProps, IExpen
                                              </div>
               
       );
+  }
+
+  public OnAddNewClick(e)
+  { 
+  ///const accountCode = e.target.getAttribute('data-item');
+  this.props.OnChangeExpenseInputView(true,'','0');
   }
 
   private _showDialog = (): void => {

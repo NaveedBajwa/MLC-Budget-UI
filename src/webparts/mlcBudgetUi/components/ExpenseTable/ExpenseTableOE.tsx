@@ -65,6 +65,7 @@ export interface IExpenseTableOEState {
   isDraggable: boolean;
   hideMsgDialog: boolean;
   dialogBoxMsg: string;
+  hideDataMsgDialog:boolean;
   studtot_id:string;
 }
 
@@ -79,7 +80,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   
   constructor(props: IExpenseTableOEProps) {
     super(props);
-    this.state = {studtot_id:"0", hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again" , Q1ST:0, Q2ST:0, Q3ST:0, Q4ST:0,itemsStudentNumber:null, trColor:"white",items:[],itemsTotal:[],itemsStudentTotal:[], costCenterId:this.props.costCenterId,budgetYearId:this.props.budgetYearId,BudgetYearText:this.props.budgetYearText};
+    this.state = {studtot_id:"0", hideDataMsgDialog:true, hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again" , Q1ST:0, Q2ST:0, Q3ST:0, Q4ST:0,itemsStudentNumber:null, trColor:"white",items:[],itemsTotal:[],itemsStudentTotal:[], costCenterId:this.props.costCenterId,budgetYearId:this.props.budgetYearId,BudgetYearText:this.props.budgetYearText};
   }
 
   private _dragOptions = {
@@ -335,7 +336,7 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
         {
           if  (this.state.Q1ST != 0)
           {
-            t1 = this.state.itemsStudentNumber.t1_total;
+            t1 = this.state.Q1ST;
           }
         }
         if(this.state.Q2ST != null )
@@ -475,6 +476,14 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
                              modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
                      </Dialog>
+                     <Dialog hidden={this.state.hideDataMsgDialog} onDismiss={this._closeDialog} 
+                              dialogContentProps={{type: DialogType.normal,title: 'Data Saved', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                             dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+                     <DialogFooter>
+                     <DefaultButton onClick={this._closeDialog} text="Close" />
+                     </DialogFooter>
+                     </Dialog>
                      </div>
               
       );
@@ -485,14 +494,14 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
   }
 
   private _closeDialog = (): void => {
-    this.setState({ hideDialog: true,hideMsgDialog:true });
+    this.setState({ hideDialog: true,hideMsgDialog:true, hideDataMsgDialog:true });
   }
   public setItems()
   {
     let response1 : any = this.SetItemsWS().then(
       response => {
         response1 = response;
-        this.setState({items: response,hideDialog: true,hideMsgDialog:true});
+        this.setState({items: response,hideDialog: true,hideMsgDialog:true, hideDataMsgDialog:true});
       }
     );
   }
@@ -660,7 +669,7 @@ public async SetItemsTotalWS(): Promise<any[]> {
           response1 = response;
           if(response!=null)
           {
-            this.setState({hideDialog: false, dialogBoxMsg: "The Numbers of Students have been successfully updated in the system", Q1ST: response.t1_total,Q2ST:response.t2_total, Q3ST:response.t3_total, Q4ST:response.t4_total, itemsStudentNumber:response ,studtot_id: response.studtot_id});
+            this.setState({hideMsgDialog: false, dialogBoxMsg: "The Numbers of Students have been successfully updated in the system", Q1ST: response.t1_total,Q2ST:response.t2_total, Q3ST:response.t3_total, Q4ST:response.t4_total, itemsStudentNumber:response ,studtot_id: response.studtot_id});
           }
         }
       );
@@ -753,7 +762,7 @@ public async SetItemsTotalWS(): Promise<any[]> {
             response1 = response;
             if(response!=null)
             {
-              this.setState({ hideDialog: false, dialogBoxMsg: "The Numbers of Students have been successfully updated in the system"});
+              this.setState({ hideDataMsgDialog: false, dialogBoxMsg: "The Numbers of Students have been successfully updated in the system"});
               this.setItemsStudentTotal();
             }
           }

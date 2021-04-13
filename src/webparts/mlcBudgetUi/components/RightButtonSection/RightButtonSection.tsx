@@ -110,7 +110,7 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
       this.setState({excelGenerated:false, budgetCategoryId: this.props.budgetCategoryId, costCenterId: this.props.costCenterId, budgetYearId: this.props.budgetYearId});
     }
 
-  
+    let fileName = "MLC_" + this.props.budgetYearId + "_" +this.props.costCenterId + ".csv";
     
     if(this.state.excelGenerated == true)
     {
@@ -129,7 +129,7 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
           <tr>
             <td align="right" colSpan={2}>
             <DefaultButton text="Excel" style={{width: "120px" }} allowDisabledFocus />
-            <CSVLink  data={this.state.excelData} target="_Self" data-interception="off" >
+            <CSVLink  data={this.state.excelData} target="_Self" data-interception="off" filename={fileName} >
                 Click here to Download
             </CSVLink>
 

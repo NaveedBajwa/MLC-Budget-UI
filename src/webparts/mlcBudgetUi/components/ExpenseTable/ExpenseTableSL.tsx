@@ -210,7 +210,11 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
     return (
         <div>
               <table style={{width:"100%", borderStyle:"solid", border:"1px", borderColor:"black",borderCollapse:"collapse" }} >
-
+                <tr >
+                  <td colSpan={8} align="right"> 
+                    <DefaultButton style={{backgroundColor:"#D3D3D3"}} text="Add Professional Development Item" onClick={this.OnAddNewClick.bind(this)} />
+                  </td>
+                </tr>
                 <tr  style={{border:1, backgroundColor:"#D3D3D3",paddingTop:3}} >
                   <td style={{width:"32%", border:"1px", borderColor:"black",borderCollapse:"collapse", borderStyle:"solid" }}>
                     <b>ITEM</b>
@@ -269,6 +273,12 @@ export class ExpenseTableSL extends React.Component<IExpenseTableSLProps, IExpen
 
   private _showDialog = (): void => {
     this.setState({ hideDialog: false,hideMsgDialog:true });
+  }
+
+  public OnAddNewClick(e)
+  { 
+  ///const accountCode = e.target.getAttribute('data-item');
+  this.props.OnChangeExpenseInputView(true,'','0');
   }
 
   private _closeDialog = (): void => {

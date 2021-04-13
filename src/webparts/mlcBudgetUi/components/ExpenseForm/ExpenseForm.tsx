@@ -114,7 +114,7 @@ export class ExpenseForm extends React.Component<IExpenseFormProps, IExpenseForm
                 </tr>
                 <tr>
                   <td style={{width:"50%", paddingLeft:5}} align="left">
-                    <DefaultButton text="Expense Table" onClick={this.OnExpenseTableclick.bind(this)} />
+                    <DefaultButton text="Return to Expense Table" onClick={this.OnExpenseTableclick.bind(this)} />
                   </td>
                   <td style={{width:"50%", paddingRight:6}}  align="right">
                     <DefaultButton text="New Item" onClick={this.Refreshthis.bind(this)} />

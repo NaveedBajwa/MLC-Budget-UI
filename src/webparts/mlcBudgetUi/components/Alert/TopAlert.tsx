@@ -30,7 +30,6 @@ export class TopAlert extends React.Component<ITopAlertProps, ITopAlertState> {
           <table style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
             <tr style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
               <td style={{backgroundColor:"#f3565d",color:"white", width:"100%",padding:"10px" }}>
-                {this.props.alertText} &nbsp; 
                 <b>
                 {this.props.boldText}
                 </b>

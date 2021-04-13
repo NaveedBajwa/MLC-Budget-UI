@@ -139,6 +139,7 @@ export interface IEFItemInputFAState {
   SelectedFA:string;  
   otherTextBoxValue:string;
   otherTextBoxDisable:boolean;
+  dialogMsg:string;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -161,7 +162,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
     let priorityOptions:IComboBoxOptionLoan[] = this.getPriorityOptions();
     let approvalOptions:IComboBoxOptionLoan[] = this.getApprovalOptions();
     let FAitems:IComboBoxOptionLoan[] = this.getFAItemCategoryOptions();
-    this.state = {otherTextBoxValue:"",otherTextBoxDisable:true,SelectedFA:"",FAItemCategoryOption:FAitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
+    this.state = {dialogMsg:"System Message",otherTextBoxValue:"",otherTextBoxDisable:true,SelectedFA:"",FAItemCategoryOption:FAitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
     APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
     hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",  COMMENTS:"", APPROVED:"0", REASON:"",
@@ -869,7 +870,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
                 </tr>
                 <tr>
                   <td>
-                  <TextField disabled={ApprovedFieldDisabled} multiline={true} label="" value={this.state.REASON} ></TextField>
+                  <TextField disabled={ApprovedFieldDisabled} multiline={true} label="" value={this.state.REASON} onChange={this.handleChangeREASON.bind(this)} ></TextField>
                   </td>
                 </tr>
               </table>
@@ -896,9 +897,9 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
 
          </table>
 
-        <Dialog hidden={this.state.hideDialog} onDismiss={this._closeDialog} 
-                              dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
+<Dialog hidden={this.state.hideDialog} onDismiss={this._closeDialog} 
+                              dialogContentProps={{type: DialogType.normal,title: this.state.dialogMsg, closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
                      <DialogFooter>
                      <DefaultButton onClick={this._closeDialog} text="Close" />
@@ -906,7 +907,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
                      </Dialog>
                      <Dialog hidden={this.state.hideMsgDialog} onDismiss={this._closeDialog} 
                               dialogContentProps={{type: DialogType.normal,title: 'System Message', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
-                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450 } },
+                             modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
         </Dialog>
       </div>
@@ -991,7 +992,7 @@ export class EFItemInputFA extends React.Component<IEFItemInputFAProps, IEFItemI
         {
 
           this.props.refreshThis(this.state.ItemsAdded);
-          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogBoxMsg: "The item has been successfully removed from the system"});
+          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogMsg:"Item Deleted", dialogBoxMsg: "The item has been successfully removed from the system"});
           this._topElement.scrollIntoView();
           //this.setItemsStudentTotal();
         }
@@ -1042,13 +1043,13 @@ public async DeleteItemWS()
     if(this.state.ITEM_DESC.length==0 && 
       (this.state.SelectedFA == "Other"))
     {
-      this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
+      this.setState({ hideDialog: false, dialogMsg:"Missing Item Name", dialogBoxMsg: "Please provide Item name"});
       return 1;
     }
 
     if(this.state.SelectedFA == '')
     {
-      this.setState({ hideDialog: false, dialogBoxMsg: "Please select an Item"});
+      this.setState({ hideDialog: false, dialogMsg:"Missing Item", dialogBoxMsg: "Please select an Item"});
       return 1;
     }
 
@@ -1131,7 +1132,7 @@ public async UpdateItemWS()
       APP_NOV_TOT:this.state.APP_NOV_TOT,
       APP_DEC_TOT:this.state.APP_DEC_TOT,
       APPROVED: this.state.APPROVED,
-      REASON: "",
+      REASON: this.state.REASON,
       ADDED_BY: "",
       ADDED_DATE: "2020-03-21T23:37:35.169Z",
       APPROVED_BY: "",
