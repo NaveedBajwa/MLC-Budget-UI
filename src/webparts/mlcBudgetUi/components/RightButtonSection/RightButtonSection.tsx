@@ -11,15 +11,11 @@ import { CSVLink,CSVDownload } from "react-csv";
 import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { Constants } from '../../components/Constants';
+import { ContextualMenu } from 'office-ui-fabric-react/lib/ContextualMenu';
+import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import {
   HttpClient,
 } from '@microsoft/sp-http';
-
-//import ReactExport from "react-data-export";
-
-//const ExcelFile = ReactExport.ExcelFile;
-//const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-//const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export interface IRightButtonSectionProps {
   budgetCategoryId:string; 
@@ -39,9 +35,24 @@ export interface IRightButtonSectionState {
   excelData:any[];
   UserDocURL:string;
   NoteURL:string;
+  hideDialog:boolean;
+  isDraggable: boolean;
+  hideMsgDialog: boolean;
+  dialogBoxMsg: string;
+  dialogMsg:string;
+  hideFYDialog:boolean;
+  hideMsgDialogSuccess:boolean;
+  AllowedBudgetYear:string;
+  IsAdmin:boolean;
 }
 
 export class RightButtonSection extends React.Component<IRightButtonSectionProps, IRightButtonSectionState> {
+  private _dragOptions = {
+    moveMenuItemText: 'Move',
+    closeMenuItemText: 'Close',
+    menu: ContextualMenu,
+  };
+  
   constructor(props: IRightButtonSectionProps) {
     super(props);
     let headers = [
@@ -92,15 +103,18 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
     ];
     let notesURL = this.getNotesURL();
     let UserDocURL = this.getUserDocURL();
-    this.state = {excelGenerated:false, excelMessage:"",budgetCategoryId:this.props.budgetCategoryId,costCenterId:this.props.costCenterId, 
-    budgetYearId:this.props.budgetYearId,header:headers,excelData:[], NoteURL:notesURL, UserDocURL:UserDocURL };
+    this.state = {AllowedBudgetYear:'0',IsAdmin:false, hideMsgDialogSuccess:true,hideFYDialog:true,excelGenerated:false, excelMessage:"",budgetCategoryId:this.props.budgetCategoryId,costCenterId:this.props.costCenterId, 
+    budgetYearId:this.props.budgetYearId,header:headers,excelData:[], NoteURL:notesURL, UserDocURL:UserDocURL,
+    hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",dialogMsg:"Updating Database"
+  };
   }
 
   public componentDidMount()
   {
     let notesURL = this.getNotesURL();
     let UserDocURL = this.getUserDocURL();
-    
+    this.IsAdmin();
+    this.IsbudgetYear();
   }
 
   public render(): JSX.Element {
@@ -110,40 +124,9 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
       this.setState({excelGenerated:false, budgetCategoryId: this.props.budgetCategoryId, costCenterId: this.props.costCenterId, budgetYearId: this.props.budgetYearId});
     }
 
-    let fileName = "MLC_" + this.props.budgetYearId + "_" +this.props.costCenterId + ".csv";
-    
-    if(this.state.excelGenerated == true)
-    {
+    let fileName = this.props.budgetYearId + "_Budget_" +this.props.costCenterId + ".csv";
       return (
-        
-        <table style={{width:"100%"}}>
-          <tr>
-            <td align="right" style={{padding:3}}>
-              <DefaultButton text="Notes" href={this.state.NoteURL}  allowDisabledFocus style={{width: "120px" }} />
-            </td>
-            <td align="right" style={{padding:3}}>
-              <DefaultButton text="User Doc" style={{width: "120px" }} href={this.state.UserDocURL}  allowDisabledFocus />
-              
-            </td>
-          </tr>
-          <tr>
-            <td align="right" colSpan={2}>
-            <DefaultButton text="Excel" style={{width: "120px" }} allowDisabledFocus />
-            <CSVLink  data={this.state.excelData} target="_Self" data-interception="off" filename={fileName} >
-                Click here to Download
-            </CSVLink>
-
-            </td>
-
-          </tr>
-        </table>
-      
-    );
-    }
-    else
-    {
-      return (
-        
+        <div>        
           <table style={{width:"100%"}}>
             <tr>
               <td align="right" style={{padding:3}}>
@@ -153,19 +136,186 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
                 <DefaultButton text="User Doc" style={{width: "120px" }}  allowDisabledFocus href={this.state.UserDocURL} target="_blank" />
                 
               </td>
-            </tr>
-            <tr>
-              <td align="right" colSpan={2}>
+              <td align="right" >
               <DefaultButton text="Excel" style={{width: "120px" }} allowDisabledFocus onClick={this.OnExcelClick.bind(this)} />
+              
               </td>
             </tr>
+            <tr>
+                {this.getExcelHTML(fileName)}
+            </tr>
+                {this.getApprovalButtonHTML()}
           </table>
+                  <Dialog hidden={this.state.hideDialog} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: "Approve Cost Centre", closeButtonAriaLabel: 'Close', subText: "Are you sure you want to approve all in this Cost Centre",}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+         <DialogFooter>
+         <DefaultButton onClick={this.BulkSaveCostCentre.bind(this)} text="Yes" />
+         <DefaultButton onClick={this._closeDialog} text="No" />
+         </DialogFooter>
+         </Dialog>
+         <Dialog hidden={this.state.hideFYDialog} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: "Approve Budget Year", closeButtonAriaLabel: 'Close', subText: "Are you sure you want to approve all in this Budget Year",}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+         <DialogFooter>
+         <DefaultButton onClick={this.BulkSaveFY.bind(this)} text="Yes" />
+         <DefaultButton onClick={this._closeDialog} text="No" />
+         </DialogFooter>
+         </Dialog>
+         <Dialog hidden={this.state.hideMsgDialog} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: 'Data Updating', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+          </Dialog>
+          <Dialog hidden={this.state.hideMsgDialogSuccess} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: 'Success', closeButtonAriaLabel: 'Close', subText: this.state.dialogBoxMsg,}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+         <DialogFooter>
+         <DefaultButton onClick={this._closeDialog} text="Close" />
+         </DialogFooter>
+          </Dialog>
+          </div>
         
       );
+  }
+
+  private _showDialog = (): void => {
+    this.setState({ hideDialog: false });
+  }
+
+  private _closeDialog = (): void => {
+    this.setState({ hideDialog: true,hideMsgDialog:true, hideFYDialog:true,hideMsgDialogSuccess:true });
+  }
+
+  public bulkSaveDialogCS()
+  {
+    this.setState({hideDialog:false});
+  }
+
+  public BulkSaveCostCentre()
+  {
+    this.setState({hideDialog:true, hideMsgDialog:false, dialogBoxMsg:"Please wait while data is being updated. This window will close automatically" });
+    let response1 : any = this.BulkSaveCostCentreWS().then(
+      response => {
+        response1 = response;
+        this.setState({hideMsgDialog:true,hideMsgDialogSuccess:false, dialogBoxMsg:"Cost Center updated successfully."  });
+        }); 
+        //this.setState({Notes:i});
+  }
+
+
+  public async BulkSaveCostCentreWS(): Promise<any[]> {
+    let WSS ="";
+    WSS = Constants.apiURL + '/ApproveAllItemsInCostCenter?costCenter=' + this.state.costCenterId + '&FY=' + this.state.budgetYearId;
+    try{
+    return await this.props.budgetAppClient
+    .get(WSS , AadHttpClient.configurations.v1)
+    .then((response: HttpClientResponse) => {
+      return response.json();
+    })
+    .then(jsonResponse => {
+      return jsonResponse;
+    }) as Promise<any>;
+    } catch (e )
+      {
+        console.error(e);
+        let i=0;
+        //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+      }
     }
 
-    
-  }
+    public bulkSaveDialogFY()
+    {
+      this.setState({hideFYDialog:false});
+    }
+  
+    public BulkSaveFY()
+    {
+      this.setState({hideFYDialog:true, hideMsgDialog:false, dialogBoxMsg:"Please wait while data is being updated. This window will close automatically" });
+      let response1 : any = this.BulkSaveFYWS().then(
+        response => {
+          response1 = response;
+          this.setState({hideMsgDialog:true,hideMsgDialogSuccess:false, dialogBoxMsg:"Budget Year updated successfully."  });
+          }); 
+          //this.setState({Notes:i});
+    }
+  
+  
+    public async BulkSaveFYWS(): Promise<any[]> {
+      let WSS ="";
+      WSS = Constants.apiURL + '/ApproveAllItemsInFY?FY=' + this.state.budgetYearId;
+      try{
+      return await this.props.budgetAppClient
+      .get(WSS , AadHttpClient.configurations.v1)
+      .then((response: HttpClientResponse) => {
+        return response.json();
+      })
+      .then(jsonResponse => {
+        return jsonResponse;
+      }) as Promise<any>;
+      } catch (e )
+        {
+          console.error(e);
+          let i=0;
+          //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+        }
+      }
+  
+
+
+
+    public getExcelHTML(fileName)
+    {
+      if(this.state.excelGenerated == true)
+      {
+        return (
+        <td align="right" colSpan={3} style={{padding:3}} >
+        <CSVLink data={this.state.excelData} target="_Self" data-interception="off" filename={fileName} >
+        Click here to Download
+        </CSVLink></td>);
+      }
+      else
+      {
+        return (<td>
+          &nbsp;
+        </td>);
+      }
+    }
+
+
+    public getApprovalButtonHTML()
+    {
+      let allowedBudgetyeardisable=true;
+      if(this.state.budgetYearId == this.state.AllowedBudgetYear)
+      {
+        allowedBudgetyeardisable = false;
+      }
+
+      if(this.state.IsAdmin == true)
+      {
+        return (
+            <tr>
+              <td colSpan={2} align="right" style={{paddingTop:24}}>
+                <DefaultButton text="Approve Cost Centre" disabled={allowedBudgetyeardisable} style={{width: "120px" }} allowDisabledFocus onClick={this.bulkSaveDialogCS.bind(this)} />
+              </td>
+              <td style={{paddingTop:24}} align="right" >
+                <DefaultButton text="Approve Budget Year" style={{width: "120px" }} disabled={allowedBudgetyeardisable} allowDisabledFocus onClick={this.bulkSaveDialogFY.bind(this)} />
+              </td>
+              </tr>
+              );
+      }
+      else
+      {
+        return (
+        <tr>
+        <td colSpan={2}>
+          &nbsp;
+        </td> </tr>);
+      }
+    }
 
     public OnExcelClick()
     {
@@ -333,5 +483,68 @@ export class RightButtonSection extends React.Component<IRightButtonSectionProps
               //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
             }
           }
+
+    public IsbudgetYear()
+    {
+      
+      let BClist:any =[];
+      let i="0";
+      let response1 : any = this.IsbudgetYearWS(this.props.budgetYearId).then(
+        response => {
+          response1 = response;
+          
+          this.setState({AllowedBudgetYear:response1});
+        });
+      
+    }
+  
+    public async IsbudgetYearWS(itemId): Promise<any[]> {
+      let WSS = Constants.apiURL + '/GetAllowedBudgetYear';
+      try{
+      return await this.props.budgetAppClient
+      .get(WSS , AadHttpClient.configurations.v1)
+      .then((response: HttpClientResponse) => {
+        return response.json();
+      })
+      .then(jsonResponse => {
+        return jsonResponse;
+      }) as Promise<any>;
+      } catch (e )
+        {
+          console.error(e);
+          let i=0;
+          //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+        }
+      }
+
+    public IsAdmin()
+    {
+      let i="0";
+      let response1 : any = this.IsAdminWS(this.props.budgetYearId).then(
+        response => {
+          response1 = response;
+          
+          this.setState({IsAdmin:response1});
+        });
+    }
+  
+    public async IsAdminWS(itemId): Promise<any[]> {
+      let WSS = Constants.apiURL + '/IsAdmin';
+      try{
+      return await this.props.budgetAppClient
+      .get(WSS , AadHttpClient.configurations.v1)
+      .then((response: HttpClientResponse) => {
+        return response.json();
+      })
+      .then(jsonResponse => {
+        return jsonResponse;
+      }) as Promise<any>;
+      } catch (e )
+        {
+          console.error(e);
+          let i=0;
+          //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+        }
+      }
   
 }

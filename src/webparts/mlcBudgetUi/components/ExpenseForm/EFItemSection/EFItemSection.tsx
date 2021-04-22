@@ -250,33 +250,5 @@ export class EFItemSection extends React.Component<IEFItemSectionProps, IEFItemS
     return ComOptions;
   }
 
-  public getBudgetYearOptions(): IComboBoxOptionLoan[]
-  {
-    
-      let ComOptions:IComboBoxOptionLoan[] = [];
-      let comOption = new IComboBoxOptionLoan();
-      comOption.key = "1"; 
-      comOption.text = "2021";
-      ComOptions = ComOptions.concat(comOption);
-      comOption = new IComboBoxOptionLoan();
-      comOption.key = "2"; 
-      comOption.text = "2020";
-      ComOptions = ComOptions.concat(comOption);
-      comOption = new IComboBoxOptionLoan();
-      comOption.key = "3"; 
-      comOption.text = "2019";
-      ComOptions = ComOptions.concat(comOption);
-      comOption = new IComboBoxOptionLoan();
-      comOption.key = "4"; 
-      comOption.text = "2018";
-      ComOptions = ComOptions.concat(comOption);
-      comOption = new IComboBoxOptionLoan();
-      comOption.key = "5"; 
-      comOption.text = "2017";
-      ComOptions = ComOptions.concat(comOption);
-
-      return ComOptions;
-  }
-  
 
 }

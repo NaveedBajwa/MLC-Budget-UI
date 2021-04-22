@@ -216,9 +216,18 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
     return this.state.itemsStudentTotal.map((item, index) => {
         return (
         <tr >
-        <td colSpan={2} align="right">
-          <b>Per Student Totals</b>
-        </td>
+          <td colSpan={2}>
+            <table style={{width:"100%"}}>
+              <tr  style={{width:"100%"}}>
+                <td  style={{width:"65%"}}>
+                  <DefaultButton text="View Previous Year's Accounts"  allowDisabledFocus href="https://www.mymlc.net/finance/account_details.cfm" target="_blank" />
+                </td>
+                <td align="right"  style={{width:"35%"}}>
+                  <b>Per Student Totals</b>
+                </td>    
+              </tr>
+            </table>
+          </td>
         <td  align="right">
         <NumberFormat value={Number(item.term1).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
           

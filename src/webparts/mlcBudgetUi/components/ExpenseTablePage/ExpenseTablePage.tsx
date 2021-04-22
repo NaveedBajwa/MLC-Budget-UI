@@ -104,7 +104,7 @@ export class ExpenseTablePage extends React.Component<IExpenseTablePageProps, IE
               BudgetCategoryOptions={this.props.BudgetCategoryOptions} CostCenterOptions={this.props.CostCenterOptions}  BudgetYearOptions={this.props.BudgetYearOptions}  />
             </td>
             <td style={{width:"25%"}}>
-              <RightButtonSection budgetCategoryId={this.props.budgetCategoryId} costCenterId={this.props.costCenterId} budgetYearId={this.props.budgetYearId} 
+              <RightButtonSection budgetCategoryId={this.props.budgetCategoryId} costCenterId={this.props.costCenterId} budgetYearId={this.props.budgetYearText} 
                budgetAppClient={this.props.budgetAppClient} context={this.props.context} />
             </td>
           </tr>

@@ -48,6 +48,7 @@ export interface IMlcBudgetingAppState {
   IsBudgetEnabled:boolean;
   IsCostCenterAssigned:boolean;
   BoldText:string;
+  CurrentBudgetYear:string;
 }
 
 export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppProps, IMlcBudgetingAppState> {
@@ -61,53 +62,139 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
     let BudgetCategoryOption:IComboBoxOptionLoan[] = [];
     let CostCenterOption:IComboBoxOptionLoan[] = [];
     let BudgetYearOption:IComboBoxOptionLoan[] = [];
-    this.state = {BoldText:"",IsCostCenterAssigned:true, IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2021",
-                    budgetYearText:"2021", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
+    this.state = {CurrentBudgetYear:"", BoldText:"",IsCostCenterAssigned:true, IsBudgetEnabled:true, itemId:"0",budgetCategoryText:"Mashhead",budgetCategoryId:FirstBudgetCategoryID, costCenterText:"Main Cost Center", costCenterId:FirstCostCenterID, budgetYearId:"2022",
+                    budgetYearText:"2022", expenseInputEnabled:true, expenseInputView:false, itemCategoryId:"1", AccountCode:"1", BudgetCategoryOptions:BudgetCategoryOption,
                     CostCenterOptions:CostCenterOption, BudgetYearOptions:BudgetYearOption};
  }
 
  public componentDidMount()
  {
+  this.getApprovedBudgetYear();
   this.IsBudget();
   this.getNonBoldAlert();
   this.getFirstBudgetCategory();
   this.getFirstCostCenter();
   this.getBudgetCategoryOptions();
-
   this.getCostCenterOptions();
 
   //let CostCenterOption:IComboBoxOptionLoan[] = this.getCostCenterOptions();
-  let BudgetYearOption:IComboBoxOptionLoan[] = this.getBudgetYearOptions();
-  this.setState({BudgetYearOptions:BudgetYearOption}); 
+  //let BudgetYearOption:IComboBoxOptionLoan[] = this.getBudgetYearOptions();
+  //this.setState({BudgetYearOptions:BudgetYearOption}); 
  }
 
  public getBudgetYearOptions(): IComboBoxOptionLoan[]
  {
-   
+      let int_CurrentBudgetYear = parseInt(this.state.CurrentBudgetYear);
       let ComOptions:IComboBoxOptionLoan[] = [];
       let comOption = new IComboBoxOptionLoan();
-      comOption.key = "2021"; 
-      comOption.text = "2021";
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = int_CurrentBudgetYear.toString(); 
+      comOption.text = int_CurrentBudgetYear.toString();
       ComOptions = ComOptions.concat(comOption);
       comOption = new IComboBoxOptionLoan();
-      comOption.key = "2020"; 
-      comOption.text = "2020";
+      comOption.key = (int_CurrentBudgetYear-1).toString(); 
+      comOption.text = (int_CurrentBudgetYear-1).toString(); 
       ComOptions = ComOptions.concat(comOption);
       comOption = new IComboBoxOptionLoan();
-      comOption.key = "2019"; 
-      comOption.text = "2019";
+      comOption.key = (int_CurrentBudgetYear-2).toString();  
+      comOption.text = (int_CurrentBudgetYear-2).toString(); 
       ComOptions = ComOptions.concat(comOption);
       comOption = new IComboBoxOptionLoan();
-      comOption.key = "2018"; 
-      comOption.text = "2018";
+      comOption.key = (int_CurrentBudgetYear-3).toString();  
+      comOption.text = (int_CurrentBudgetYear-3).toString(); 
       ComOptions = ComOptions.concat(comOption);
       comOption = new IComboBoxOptionLoan();
-      comOption.key = "2017"; 
-      comOption.text = "2017";
+      comOption.key = (int_CurrentBudgetYear-4).toString();  
+      comOption.text = (int_CurrentBudgetYear-4).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-5).toString();  
+      comOption.text = (int_CurrentBudgetYear-5).toString(); 
       ComOptions = ComOptions.concat(comOption);
 
      return ComOptions;
  }
+
+ public getApprovedBudgetYear() 
+ {
+   let i = "0";
+   let response1 : any = this.getApprovedBudgetYearWS().then(
+     response => {
+       response1 = response;
+       let int_CurrentBudgetYear = parseInt(response1);
+      let ComOptions:IComboBoxOptionLoan[] = [];
+      let comOption = new IComboBoxOptionLoan();
+      comOption = new IComboBoxOptionLoan();
+      comOption.key =response1.toString(); 
+      comOption.text =response1.toString();
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (response1-1).toString(); 
+      comOption.text = (int_CurrentBudgetYear-1).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-2).toString();  
+      comOption.text = (int_CurrentBudgetYear-2).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-3).toString();  
+      comOption.text = (int_CurrentBudgetYear-3).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-4).toString();  
+      comOption.text = (int_CurrentBudgetYear-4).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-5).toString();  
+      comOption.text = (int_CurrentBudgetYear-5).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-6).toString();  
+      comOption.text = (int_CurrentBudgetYear-6).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-7).toString();  
+      comOption.text = (int_CurrentBudgetYear-7).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-8).toString();  
+      comOption.text = (int_CurrentBudgetYear-8).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-9).toString();  
+      comOption.text = (int_CurrentBudgetYear-9).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      comOption = new IComboBoxOptionLoan();
+      comOption.key = (int_CurrentBudgetYear-10).toString();  
+      comOption.text = (int_CurrentBudgetYear-10).toString(); 
+      ComOptions = ComOptions.concat(comOption);
+      this.setState({BudgetYearOptions:ComOptions, CurrentBudgetYear:response1,budgetYearText:response1, budgetYearId:response1});
+       
+     } 
+       );
+ }
+
+
+
+ public async getApprovedBudgetYearWS(): Promise<any[]> {
+   let WSS = Constants.apiURL + '/GetAllowedBudgetYear';
+   try{
+   return await this.props.budgetAppClient
+   .get(WSS , AadHttpClient.configurations.v1)
+   .then((response: HttpClientResponse) => {
+     return response.json();
+   })
+   .then(jsonResponse => {
+     return jsonResponse;
+   }) as Promise<any>;
+   } catch (e )
+     {
+       console.error(e);
+       let i=0;
+       //this.setState({hasError:true, dialogBoxMsg: "Something went wrong, Please refresh the page. If this happens again, please contact your administrator"});
+     }
+   }
+
 
  public getFirstBudgetCategory() 
  {
@@ -206,7 +293,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
             <tr style={{backgroundColor:"#f3565d",color:"white", width:"100%" }}>
               <td style={{backgroundColor:"#f3565d",color:"white", width:"100%",padding:"10px" }}>
                 <b>
-                 The Finance System indicates that you do not have responsibility for any faculty budgets. As a result, There is no information to display. <br/>If you feel you should have access to these resources, please contact Louisa Johnstone on ext 6318.
+                 The Finance System indicates that you do not have responsibility for any faculty budgets. As a result, there is no information to display. <br/>If you feel you should have access to these resources, please contact Louisa Johnstone on ext 6318.
                 </b>
               </td>
             </tr>
@@ -236,7 +323,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
         <div className={ styles.mlcBudgetingApp }>
           
           <ExpenseTablePage budgetCategoryText={this.state.budgetCategoryText} budgetCategoryId={this.state.budgetCategoryId} costCenterText={this.state.costCenterText}
-            costCenterId={this.state.costCenterId} budgetYearId={"2021"} budgetYearText={this.state.budgetYearText} OnBudgetCategoryChange={this.OnBudgetCategoryChange.bind(this)}
+            costCenterId={this.state.costCenterId} budgetYearId={this.state.budgetYearText} budgetYearText={this.state.budgetYearText} OnBudgetCategoryChange={this.OnBudgetCategoryChange.bind(this)}
             OnChangeCostCenter={this.OnChangeCostCenter.bind(this)} OnChangeYear={this.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.OnChangeExpenseInputView.bind(this)} 
             OnChangeitemCategoryId={this.OnChangeitemCategoryId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context} 
             BudgetCategoryOptions={this.state.BudgetCategoryOptions} CostCenterOptions={this.state.CostCenterOptions}  BudgetYearOptions={this.state.BudgetYearOptions}            
@@ -249,7 +336,7 @@ export default class MlcBudgetingApp extends React.Component<IMlcBudgetingAppPro
       return (
         <div className={ styles.mlcBudgetingApp }>
           <ExpenseForm OnChangeItemId={this.OnChangeItemId.bind(this)}   itemId={this.state.itemId} budgetCategoryText={this.state.budgetCategoryText} budgetCategoryId={this.state.budgetCategoryId} costCenterText={this.state.costCenterText}
-            costCenterId={this.state.costCenterId} budgetYearId={"2021"} budgetYearText={this.state.budgetYearText} OnBudgetCategoryChange={this.OnBudgetCategoryChange.bind(this)}
+            costCenterId={this.state.costCenterId} budgetYearId={this.state.budgetYearText} budgetYearText={this.state.budgetYearText} OnBudgetCategoryChange={this.OnBudgetCategoryChange.bind(this)}
             OnChangeCostCenter={this.OnChangeCostCenter.bind(this)} OnChangeYear={this.OnChangeYear.bind(this)} OnChangeExpenseInputView={this.OnChangeExpenseInputView.bind(this)} 
             OnChangeitemCategoryId={this.OnChangeitemCategoryId.bind(this)} budgetAppClient={this.props.budgetAppClient} context={this.props.context} itemCategoryId={this.state.itemCategoryId} 
             BudgetCategoryOptions={this.state.BudgetCategoryOptions} CostCenterOptions={this.state.CostCenterOptions}  BudgetYearOptions={this.state.BudgetYearOptions}

@@ -229,7 +229,7 @@ export class EFItemSectionOE extends React.Component<IEFItemSectionOEProps, IEFI
 
 
   public async GetItemCategoriesWS(): Promise<any[]> {
-    let WSS = Constants.apiURL + '/GetDistinctOEItemCategoryByBudgetCategory_CostCentre_FY?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
+    let WSS = Constants.apiURL + '/GetDistinctOEItemCategoryByBudgetCategory_CostCentre_FY2?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
         this.props.costCenterId +'&FY=' + this.props.budgetYearText;
     try{
     return await this.props.budgetAppClient

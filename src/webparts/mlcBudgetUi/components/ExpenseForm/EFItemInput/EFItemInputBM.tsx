@@ -140,6 +140,9 @@ export interface IEFItemInputBMState {
   otherTextBoxValue:string;
   otherTextBoxDisable:boolean;
   dialogMsg:string;
+  hideFYDialog:boolean;
+  hideMsgDialogSuccess:boolean;
+  hideDeleteMsgDialog:boolean;
 }
 
 export class IComboBoxOptionLoan implements IComboBoxOption
@@ -164,7 +167,7 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
     let priorityOptions:IComboBoxOptionLoan[] = this.getPriorityOptions();
     let approvalOptions:IComboBoxOptionLoan[] = this.getApprovalOptions();
     let BMitems:IComboBoxOptionLoan[] = this.getBMItemCategoryOptions();
-    this.state = {dialogMsg:"System Message",otherTextBoxValue:"",otherTextBoxDisable:true,SelectedBM:"",BMItemCategoryOption:BMitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
+    this.state = {hideDeleteMsgDialog:true,hideMsgDialogSuccess:true,hideFYDialog:true,dialogMsg:"System Message",otherTextBoxValue:"",otherTextBoxDisable:true,SelectedBM:"",BMItemCategoryOption:BMitems,IsAdmin:false, AllowedBudgetYear:this.props.YearId,IsBudgetReadOnly:false, ItemsAdded:1, item:null,itemId:this.props.itemId, BudgetCategoryId:"1",PRIORITY:"1",priorityOptions:priorityOptions,approvalOptions:approvalOptions,
     JAN_TOT:0,FEB_TOT:0,MAR_TOT:0,APR_TOT:0,MAY_TOT:0,JUN_TOT:0,JUL_TOT:0,AUG_TOT:0,SEP_TOT:0,OCT_TOT:0,NOV_TOT:0,DEC_TOT:0,
     APP_JAN_TOT:0,APP_FEB_TOT:0,APP_MAR_TOT:0,APP_APR_TOT:0,APP_MAY_TOT:0,APP_JUN_TOT:0,APP_JUL_TOT:0,APP_AUG_TOT:0,APP_SEP_TOT:0,APP_OCT_TOT:0,APP_NOV_TOT:0,APP_DEC_TOT:0,
     hideDialog:true,hideMsgDialog:true, isDraggable:true, dialogBoxMsg:"Something went Wrong, Please try again",  COMMENTS:"", APPROVED:"0", REASON:"",
@@ -217,11 +220,11 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
     {
       requestFieldsDisabled = false;
       ApprovedFieldDisabled = false;
-      if(this.state.AllowedBudgetYear != this.props.YearId)
+     /* if(this.state.AllowedBudgetYear != this.props.YearId)
       {
         requestFieldsDisabled = true;
         ApprovedFieldDisabled = true;
-      }
+      }*/
     }
 
     //*********************
@@ -473,11 +476,7 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
                     <b>Quarterly</b>
                   </td>
                   <td>&nbsp;</td>
-                  <td align="right" style={{width:"17%", cursor:"pointer"}} onClick={this.copyApproved.bind(this)}>
-                      <Tooltip title={<h3>Click to Fill-down Amounts</h3>} placement="top" arrow>
-                        <b>Approved</b>
-                        </Tooltip>    
-                  </td>
+                    {this.GetToolTiptd()}
                   <td align="right" style={{width:"17%"}}>
                     <b>Quarterly</b>
                   </td>
@@ -913,9 +912,57 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
                              modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
                              dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
         </Dialog>
+        <Dialog hidden={this.state.hideFYDialog} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: "Confirm Item Delete", closeButtonAriaLabel: 'Close', subText: "Are you sure you want to delete this Item?",}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+         <DialogFooter>
+         <DefaultButton onClick={this.DeleteItem.bind(this)} text="Yes" />
+         <DefaultButton onClick={this._closeDialog} text="No" />
+         </DialogFooter>
+         </Dialog>
+         <Dialog hidden={this.state.hideDeleteMsgDialog} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: 'Deleting Data', closeButtonAriaLabel: 'Close', subText: "Please wait while the item is deleted, this window will close automatically",}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+          </Dialog>
+          <Dialog hidden={this.state.hideMsgDialogSuccess} onDismiss={this._closeDialog} 
+                  dialogContentProps={{type: DialogType.normal,title: 'Success', closeButtonAriaLabel: 'Close', subText: "The Item was deleted succesfully",}} 
+                 modalProps={{titleAriaId: "testingLabelID", subtitleAriaId: "testingLabelIDsub", isBlocking: false, styles: { main: { maxWidth: 450,backgroundColor:"#CCCCCC" } },
+                 dragOptions: this.state.isDraggable ? this._dragOptions : undefined,}}>
+         <DialogFooter>
+         <DefaultButton onClick={this._closeDialog} text="Close" />
+         </DialogFooter>
+         </Dialog>
       </div>
     
     );
+  }
+
+  public GetToolTiptd()
+  {
+    if(this.state.IsAdmin)
+    {
+      return(
+        <td align="right" style={{cursor:"pointer", width:"17%"}}  onClick={this.copyApproved.bind(this)}>
+                      <Tooltip title={<h3>Click to Fill-down Amounts</h3>} placement="top" arrow>
+                        <b>Approved</b>
+                        </Tooltip>       
+                  </td> );
+    }
+    else{
+      return(
+        <td align="right" style={{width:"17%"}}  >
+                        <b>Approved</b>
+                  </td> );
+    }
+
+  }
+
+
+  public showDeleteMsg()
+  {
+    this.setState({hideFYDialog:false});
   }
 
   public getBMItemCategoryOptions(): IComboBoxOptionLoan[]
@@ -981,12 +1028,7 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
 
   public DeleteItem()
   {
-/*    if(this.state.ITEM_DESC.length==0)
-    {
-      this.setState({ hideDialog: false, dialogBoxMsg: "Please provide Item name"});
-      return 1;
-    }
-*/
+    this.setState({hideFYDialog:true, hideDeleteMsgDialog:false});
     let response1 : any = this.DeleteItemWS().then(
       response => {
         response1 = response;
@@ -994,14 +1036,15 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
         {
 
           this.props.refreshThis(this.state.ItemsAdded);
-          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDialog: false, dialogMsg:"Item Deleted", dialogBoxMsg: "The item has been successfully removed from the system"});
+          this.setState({ ItemsAdded:(this.state.ItemsAdded +1),hideDeleteMsgDialog:true,hideMsgDialogSuccess:false });
+          this.NewItem();
           this._topElement.scrollIntoView();
           //this.setItemsStudentTotal();
         }
       }
     );
 
-  } 
+  }  
 
 public async DeleteItemWS()
 {
@@ -1216,7 +1259,7 @@ public async UpdateItemWS()
   }
 
   private _closeDialog = (): void => {
-    this.setState({ hideDialog: true });
+    this.setState({hideDialog: true,hideMsgDialog:true, hideFYDialog:true,hideMsgDialogSuccess:true,hideDeleteMsgDialog:true });
   }
 
   public getPriorityOptions(): IComboBoxOptionLoan[]
@@ -1431,342 +1474,435 @@ public async UpdateItemWS()
       }
 
 
-    public handleChangeJAN_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.JAN_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+      public handleChangeJAN_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ JAN_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.JAN_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ JAN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ JAN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeFEB_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ FEB_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.FEB_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ FEB_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeFEB_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.FEB_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeMAR_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ MAR_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.MAR_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ MAR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ FEB_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPR_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APR_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APR_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeMAR_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.MAR_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeMAY_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ MAY_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.MAY_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ MAY_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ MAR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeJUN_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ JUN_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.JUN_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ JUN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPR_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APR_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeJUL_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ JUL_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.JUL_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ JUL_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ APR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAUG_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ AUG_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.AUG_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ AUG_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeMAY_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.MAY_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeSEP_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ SEP_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.SEP_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ SEP_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ MAY_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeOCT_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ OCT_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.OCT_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ OCT_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeJUN_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.JUN_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeNOV_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ NOV_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.NOV_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ NOV_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ JUN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeDEC_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ DEC_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.DEC_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ DEC_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeJUL_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.JUL_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_JAN_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_JAN_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_JAN_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_JAN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ JUL_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_FEB_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_FEB_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_FEB_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_FEB_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAUG_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.AUG_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_MAR_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_MAR_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_MAR_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_MAR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ AUG_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_APR_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_APR_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_APR_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_APR_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeSEP_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.SEP_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_MAY_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_MAY_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_MAY_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_MAY_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ SEP_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_JUN_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_JUN_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_JUN_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_JUN_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeOCT_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.OCT_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_JUL_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_JUL_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_JUL_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_JUL_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ OCT_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_AUG_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_AUG_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_AUG_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_AUG_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeNOV_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.NOV_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_SEP_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_SEP_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_SEP_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_SEP_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ NOV_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_OCT_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_OCT_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_OCT_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_OCT_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeDEC_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.DEC_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
+  
+      public handleChangeAPP_NOV_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_NOV_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_NOV_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_NOV_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      else
-      {
-        this.setState({ DEC_TOT: parseInt(evt.target.value.substr(0, 100)) });
+  
+      public handleChangeAPP_DEC_TOT(evt)  {
+        if(evt.target.value.substr(0, 100) == '' )
+        {
+          this.setState({ APP_DEC_TOT: 0 });
+        }
+        else if( isNaN(evt.target.value.substr(0, 100)) )
+        {
+          //alert("Please provide numeric value for Loan Amount")
+          evt.target.value = this.state.APP_DEC_TOT;
+          this.setState({ hideDialog: false, dialogMsg:"Numeric Value Required", dialogBoxMsg: "The dollar amount entered MUST be a whole number.\n\n \n\nTo enter a negative amount, please enter the number\n\nfirst, then add the minus sign to the front of the number."});
+        }
+        else
+        {
+          this.setState({ APP_DEC_TOT: parseInt(evt.target.value.substr(0, 100)) });
+        }
+        //alert(evt.target.value.substr(0, 100)); 
       }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_JAN_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_JAN_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_JAN_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_FEB_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_FEB_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_FEB_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_MAR_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_MAR_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_MAR_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_APR_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_APR_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_APR_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_MAY_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_MAY_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_MAY_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_JUN_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_JUN_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_JUN_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_JUL_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_JUL_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_JUL_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_AUG_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_AUG_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_AUG_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_SEP_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_SEP_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_SEP_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_OCT_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_OCT_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_OCT_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_NOV_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_NOV_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_NOV_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-    public handleChangeAPP_DEC_TOT(evt)  {
-      if( isNaN(evt.target.value.substr(0, 100)) )
-      {
-        //alert("Please provide numeric value for Loan Amount")
-        evt.target.value = this.state.APP_DEC_TOT;
-        this.setState({ hideDialog: false, dialogBoxMsg: "Please provide a numeric value"});
-      }
-      else
-      {
-        this.setState({ APP_DEC_TOT: parseInt(evt.target.value.substr(0, 100)) });
-      }
-      //alert(evt.target.value.substr(0, 100)); 
-    }
-
-
-
 }
