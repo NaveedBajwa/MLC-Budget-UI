@@ -17,11 +17,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "MLC-Budget-UI" },
-    "description": { "default": "MLC-Budget-UI Description" },
+    "title": { "default": "MLC Budget App" },
+    "description": { "default": "MLC Budget App Description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "MLC-Budget-UI"
+      "description": "MLC Budget App"
     }
   }]
 }

@@ -318,25 +318,25 @@ export class EFItemInputTC extends React.Component<IEFItemInputTCProps, IEFItemI
       //Q4DiffMultiplier = -1;
     }
 
-    if ((this.state.JAN_TOT +  this.state.FEB_TOT + this.state.MAR_TOT) -((this.state.APP_JAN_TOT +  this.state.APP_FEB_TOT + this.state.APP_MAR_TOT) * Q1DiffMultiplier) <0)     
+    if ((((this.state.APP_JAN_TOT +  this.state.APP_FEB_TOT + this.state.APP_MAR_TOT) * Q1DiffMultiplier) - (this.state.JAN_TOT +  this.state.FEB_TOT + this.state.MAR_TOT)) <0)     
     {
       Q1DiffColor = "red";
     }
-    if ((this.state.APR_TOT +  this.state.MAY_TOT + this.state.JUN_TOT) -((this.state.APP_APR_TOT +  this.state.APP_MAY_TOT + this.state.APP_JUN_TOT) * Q2DiffMultiplier) <0)     
+    if ((((this.state.APP_APR_TOT +  this.state.APP_MAY_TOT + this.state.APP_JUN_TOT) * Q2DiffMultiplier) - (this.state.APR_TOT +  this.state.MAY_TOT + this.state.JUN_TOT)) <0)     
     {
       Q2DiffColor = "red";
     }
-    if ((this.state.JUL_TOT +  this.state.AUG_TOT + this.state.SEP_TOT) -((this.state.APP_JUL_TOT +  this.state.APP_AUG_TOT + this.state.APP_SEP_TOT) * Q3DiffMultiplier) <0)     
+    if ((((this.state.APP_JUL_TOT +  this.state.APP_AUG_TOT + this.state.APP_SEP_TOT) * Q3DiffMultiplier) - (this.state.JUL_TOT +  this.state.AUG_TOT + this.state.SEP_TOT)) <0)     
     {
       Q3DiffColor = "red";
     }
-    if ((this.state.OCT_TOT +  this.state.NOV_TOT + this.state.DEC_TOT) -((this.state.APP_OCT_TOT +  this.state.APP_NOV_TOT + this.state.APP_DEC_TOT) * Q4DiffMultiplier) <0)     
+    if ((((this.state.APP_OCT_TOT +  this.state.APP_NOV_TOT + this.state.APP_DEC_TOT) * Q4DiffMultiplier) - (this.state.OCT_TOT +  this.state.NOV_TOT + this.state.DEC_TOT)) <0)     
     {
       Q4DiffColor = "red";
     }
 
     let totaldiffmultuplier = 1;
-    let totalDiffColor = "white";
+    let totalDiffColor = "black";
 
     if((this.state.JAN_TOT +  this.state.FEB_TOT + this.state.MAR_TOT + +this.state.APR_TOT +  this.state.MAY_TOT + this.state.JUN_TOT+this.state.JUL_TOT +  this.state.AUG_TOT + this.state.SEP_TOT+this.state.OCT_TOT +  this.state.NOV_TOT + this.state.DEC_TOT) <0)
     {
@@ -349,9 +349,9 @@ export class EFItemInputTC extends React.Component<IEFItemInputTCProps, IEFItemI
       //totaldiffmultuplier = -1;
     }
 
-    if ((this.state.JAN_TOT +  this.state.FEB_TOT + this.state.MAR_TOT + +this.state.APR_TOT +  this.state.MAY_TOT + this.state.JUN_TOT+this.state.JUL_TOT +  this.state.AUG_TOT + this.state.SEP_TOT+this.state.OCT_TOT +  this.state.NOV_TOT + this.state.DEC_TOT) -
-      ((this.state.APP_JAN_TOT +  this.state.APP_FEB_TOT + this.state.APP_MAR_TOT + +this.state.APP_APR_TOT +  this.state.APP_MAY_TOT + this.state.APP_JUN_TOT+this.state.APP_JUL_TOT +  this.state.APP_AUG_TOT + this.state.APP_SEP_TOT+this.state.APP_OCT_TOT +  this.state.APP_NOV_TOT + this.state.APP_DEC_TOT)
-      * Q4DiffMultiplier) <0)     
+    if ((((this.state.APP_JAN_TOT +  this.state.APP_FEB_TOT + this.state.APP_MAR_TOT + +this.state.APP_APR_TOT +  this.state.APP_MAY_TOT + this.state.APP_JUN_TOT+this.state.APP_JUL_TOT +  this.state.APP_AUG_TOT + this.state.APP_SEP_TOT+this.state.APP_OCT_TOT +  this.state.APP_NOV_TOT + this.state.APP_DEC_TOT)
+    * Q4DiffMultiplier) - (this.state.JAN_TOT +  this.state.FEB_TOT + this.state.MAR_TOT + +this.state.APR_TOT +  this.state.MAY_TOT + this.state.JUN_TOT+this.state.JUL_TOT +  this.state.AUG_TOT + this.state.SEP_TOT+this.state.OCT_TOT +  this.state.NOV_TOT + this.state.DEC_TOT)) 
+       <0)     
     {
       totalDiffColor = "red";
     }
@@ -611,7 +611,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                         </b>
                       </td>
                       <td  align="right"> <b>
-                        <NumberFormat style={{color:Q1DiffColor}} value={Number((this.state.MAR_TOT + this.state.FEB_TOT + this.state.JAN_TOT) - ((this.state.APP_MAR_TOT + this.state.APP_FEB_TOT + this.state.APP_JAN_TOT)*Q1DiffMultiplier)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
+                        <NumberFormat style={{color:Q1DiffColor}} value={Number(((this.state.APP_MAR_TOT + this.state.APP_FEB_TOT + this.state.APP_JAN_TOT)*Q1DiffMultiplier)- (this.state.MAR_TOT + this.state.FEB_TOT + this.state.JAN_TOT)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
                         </b>
                       </td>
                     </tr>
@@ -683,7 +683,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                         </b>
                       </td>
                       <td  align="right"> <b>
-                        <NumberFormat style={{color:Q2DiffColor}} value={Number((this.state.APR_TOT + this.state.MAY_TOT + this.state.JUN_TOT ) - ((this.state.APP_APR_TOT + this.state.APP_MAY_TOT + this.state.APP_JUN_TOT)*Q2DiffMultiplier)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
+                        <NumberFormat style={{color:Q2DiffColor}} value={Number(((this.state.APP_APR_TOT + this.state.APP_MAY_TOT + this.state.APP_JUN_TOT)*Q2DiffMultiplier) - (this.state.APR_TOT + this.state.MAY_TOT + this.state.JUN_TOT )).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
                         </b>
                       </td>
                     </tr>
@@ -756,7 +756,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                         </b>
                       </td>
                       <td  align="right"><b>
-                        <NumberFormat style={{color:Q3DiffColor}} value={Number((this.state.JUL_TOT + this.state.AUG_TOT + this.state.SEP_TOT) - ((this.state.APP_JUL_TOT + this.state.APP_AUG_TOT + this.state.APP_SEP_TOT) *Q3DiffMultiplier)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
+                        <NumberFormat style={{color:Q3DiffColor}} value={Number(((this.state.APP_JUL_TOT + this.state.APP_AUG_TOT + this.state.APP_SEP_TOT) *Q3DiffMultiplier) - (this.state.JUL_TOT + this.state.AUG_TOT + this.state.SEP_TOT)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
                         </b>
                       </td>
                     </tr>
@@ -828,7 +828,7 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                         </b>
                       </td>
                       <td  align="right"><b>
-                        <NumberFormat style={{color:Q4DiffColor}} value={Number((this.state.OCT_TOT + this.state.NOV_TOT + this.state.DEC_TOT) - ((this.state.APP_OCT_TOT + this.state.APP_NOV_TOT + this.state.APP_DEC_TOT)*Q4DiffMultiplier)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
+                        <NumberFormat style={{color:Q4DiffColor}} value={Number(((this.state.APP_OCT_TOT + this.state.APP_NOV_TOT + this.state.APP_DEC_TOT)*Q4DiffMultiplier) - (this.state.OCT_TOT + this.state.NOV_TOT + this.state.DEC_TOT)).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
                       </b>
                       </td>
                     </tr>
@@ -867,8 +867,9 @@ let Total_TOT = tot_JAN_TOT + tot_FEB_TOT + tot_MAR_TOT + tot_APR_TOT + tot_MAY_
                       </td>
                       <td align="right">
                         <b>
-                          <NumberFormat style={{color:totalDiffColor}} value={Number((this.state.JAN_TOT + this.state.FEB_TOT + this.state.MAR_TOT +this.state.APR_TOT + this.state.MAY_TOT + this.state.JUN_TOT +this.state.JUL_TOT + this.state.AUG_TOT + this.state.SEP_TOT +this.state.OCT_TOT + this.state.NOV_TOT + this.state.DEC_TOT) -
-                             (this.state.APP_JAN_TOT + this.state.APP_FEB_TOT + this.state.APP_MAR_TOT +this.state.APP_APR_TOT + this.state.APP_MAY_TOT + this.state.APP_JUN_TOT +this.state.APP_JUL_TOT + this.state.APP_AUG_TOT + this.state.APP_SEP_TOT +this.state.APP_OCT_TOT + this.state.APP_NOV_TOT + this.state.APP_DEC_TOT )).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                          <NumberFormat style={{color:totalDiffColor}} value={Number((this.state.APP_JAN_TOT + this.state.APP_FEB_TOT + this.state.APP_MAR_TOT +this.state.APP_APR_TOT + this.state.APP_MAY_TOT + this.state.APP_JUN_TOT +this.state.APP_JUL_TOT + this.state.APP_AUG_TOT + this.state.APP_SEP_TOT +this.state.APP_OCT_TOT + this.state.APP_NOV_TOT + this.state.APP_DEC_TOT ) - 
+                          (this.state.JAN_TOT + this.state.FEB_TOT + this.state.MAR_TOT +this.state.APR_TOT + this.state.MAY_TOT + this.state.JUN_TOT +this.state.JUL_TOT + this.state.AUG_TOT + this.state.SEP_TOT +this.state.OCT_TOT + this.state.NOV_TOT + this.state.DEC_TOT) 
+                             ).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                        </b>
                       </td>
                     </tr>

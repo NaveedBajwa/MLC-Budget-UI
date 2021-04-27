@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "mlc-budget-ui-client-side-solution",
+    "name": "MLC Budget App",
     "id": "ab7f5ffc-c0e6-4b72-bcc3-895fcc196ea3",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,

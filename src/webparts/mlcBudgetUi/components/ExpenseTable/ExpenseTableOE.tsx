@@ -203,8 +203,8 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
         <NumberFormat value={Number(item.approvedTotal).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
           
         </td>
-        <td >
-          &nbsp;
+        <td align="right">
+        <NumberFormat value={Number(item.lastFYBudget).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
         </td>
       </tr>  );
       }
@@ -252,8 +252,8 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
         <NumberFormat value={Number(item.approvedTotal).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
           
         </td>
-        <td >
-          &nbsp;
+        <td align="right">
+        <NumberFormat value={Number(item.lastFYBudget).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={'$'} /> 
         </td>
       </tr>  );
       }
