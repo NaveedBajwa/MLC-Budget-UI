@@ -885,7 +885,7 @@ export class EFItemInputBM extends React.Component<IEFItemInputBMProps, IEFItemI
               <table style={{width:"100%"}}>
                 <tr  style={{width:"100%"}}>
                   <td style={{width:"33%"}} align="left">
-                    <DefaultButton text="Delete" disabled={requestFieldsDisabled} style={{display:displayDelete}} onClick={this.DeleteItem.bind(this)} />
+                    <DefaultButton text="Delete" disabled={requestFieldsDisabled} style={{display:displayDelete}} onClick={this.showDeleteMsg.bind(this)} />
                   </td>
                   <td style={{width:"33%"}} align="center">
                     <DefaultButton text="Cancel" onClick={this.NewItem.bind(this)} />

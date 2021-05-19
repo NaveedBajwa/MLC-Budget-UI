@@ -521,7 +521,9 @@ export class ExpenseTableOE extends React.Component<IExpenseTableOEProps, IExpen
     {
       return [];
     }
-    let WSS = Constants.apiURL + '/GetExpenseTableByBudgetCategory_CostCentre_FY?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
+    //let WSS = Constants.apiURL + '/GetExpenseTableByBudgetCategory_CostCentre_FY?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
+    //    this.props.costCenterId +'&FY=' + this.props.budgetYearText;
+    let WSS = Constants.apiURL + '/GetExpenseTableByBudgetCategory_CostCentre_FY3?budgetCategory=' + this.props.budgetCategoryId + '&costCenter='+ 
         this.props.costCenterId +'&FY=' + this.props.budgetYearText;
     try{
     return await this.props.budgetAppClient
